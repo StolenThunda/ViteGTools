@@ -1,0 +1,47 @@
+{
+  "name": "vitetools",
+  "version": "0.0.1",
+  "description": "A Quasar Project",
+  "productName": "Quasar App",
+  "author": "Antonio Moses <tonymoses@texasbluesalley.com>",
+  "private": true,
+  "scripts": {
+    "dev:spa": "quasar d",
+    "dev:electron": "quasar dev -m electron -- --no-sandbox --disable-setuid-sandbox  --devtools  ",
+    "build:electron:all": "quasar b -m electron all -t mat",
+    "build:electron:linux": "quasar b -m electron linux x64 all -t mat",
+    "build:electron:darwin": "quasar b -m electron darwin x64 -t mat",
+    "build:electron:win": "quasar b -m electron win32 x64 -t mat",
+    "lint": "eslint --ext .js,.vue ./",
+    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "@svgdotjs/svg.filter.js": "^3.0.8",
+    "@svgdotjs/svg.js": "^3.1.2",
+    "@svgdotjs/svg.panzoom.js": "^2.1.2",
+    "@vue/devtools": "^6.2.1",
+    "fastclick": "^1.0.6",
+    "global": "^4.4.0",
+    "quasar": "^2.6.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app-vite": "^1.0.0",
+    "autoprefixer": "^10.4.2",
+    "electron": "^20.2.0",
+    "electron-packager": "^15.2.0",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "postcss": "^8.4.14",
+    "prettier": "^2.5.1"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  }
+}

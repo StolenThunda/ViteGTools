@@ -1,0 +1,28 @@
+{
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": [
+    "source.fixAll.eslint"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "vue"
+  ],
+  "cSpell.words": [
+    "Fretboard"
+  ],
+  "cSpell.language": "en,lorem,en-US,en-GB",
+  "cSpell.enableFiletypes": [
+    "Log",
+    "log",
+    "markdown_latex_combined",
+    "vue-directives",
+    "vue-injection-markdown",
+    "vue-interpolations",
+    "vue-sfc-style-variable-injection"
+  ]
+}
