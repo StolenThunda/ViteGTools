@@ -219,57 +219,7 @@
         </q-expansion-item>
         <q-space />
       </q-list>
-      <div
-        class="content-center fixed-bottom"
-        v-show="selectionsAvaliable"
-      >
-        <q-list
-          padding
-          separator
-        >
-          <q-item
-            @click="selectionDialog = true"
-            clickable
-            v-ripple
-            class="bg-accent"
-          >
-            <q-item-section avatar>
-              <q-icon name="rule" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-body1 text-weight-bold">Selections</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item
-            @click="resetFilters"
-            clickable
-            v-ripple
-            class="bg-accent"
-          >
-            <q-item-section avatar>
-              <q-icon name="restart_alt" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-body1 text-weight-bold">Reset Filter</q-item-label>
 
-            </q-item-section>
-          </q-item>
-          <q-item
-            @click="refreshUI"
-            clickable
-            v-ripple
-            class="bg-accent"
-          >
-            <q-item-section avatar>
-              <q-icon name="sync_alt" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label class="text-body1 text-weight-bold">Refresh Fretboard</q-item-label>
-
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </div>
 
 
     </q-drawer>
@@ -290,6 +240,28 @@
           </div>
         </div>
       </div>
+      <q-page-sticky position="bottom-right" :offset="[18, 18]">
+      <q-fab
+        icon="add"
+        direction="left"
+        color="accent"
+        v-show="selectionsAvailable"
+      >
+      <q-fab-action
+        @click="resetFilters"
+        color="accent"
+        icon="restart_alt"
+        label="Reset"
+      />
+        <q-fab-action
+          @click="selectionDialog = true"
+          color="accent"
+          icon="rule"
+          label="Selections"
+        />
+
+      </q-fab>
+      </q-page-sticky>
     </q-page-container>
     <q-dialog v-model="selectionDialog">
       <q-card
@@ -788,7 +760,7 @@ export default defineComponent( {
         ...this.rootsSelected,
       ];
     },
-    selectionsAvaliable () {
+    selectionsAvailable () {
       return (
         this.accBoxes.length +
         this.accPatterns.length +
@@ -2178,7 +2150,7 @@ export default defineComponent( {
       this.resetFretboard();
       // hide disabled toggles
       hideDisabled();
-      if ( !this.selectionsAvaliable && this.rightDrawerOpen )
+      if ( !this.selectionsAvailable && this.rightDrawerOpen )
         this.toggleResultPanel( false );
 
       this.updateFretboard();
