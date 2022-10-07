@@ -61,6 +61,18 @@ const linksList = [
     caption: 'Scales, "Boxes" and More',
     icon: 'pattern',
     link: '/fretboard'
+  },
+  {
+    title: 'Spider Tool',
+    caption: 'Finger strengthening and dexterity',
+    icon: 'fa-bug',
+    link: '/spider'
+  },
+  {
+    title: 'Tuner',
+    caption: 'Tuner',
+    icon: 'metronome',
+    link: '/tuner'
   }
 ]
 

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "ES2015",
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
@@ -11,6 +12,9 @@
       ],
       "components/*": [
         "src/components/*"
+      ],
+      "middleware/*": [
+        "src/middleware/tools/*"
       ],
       "layouts/*": [
         "src/layouts/*"

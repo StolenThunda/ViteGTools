@@ -17,6 +17,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "howler": "^2.2.3",
     "@quasar/extras": "^1.0.0",
     "@svgdotjs/svg.filter.js": "^3.0.8",
     "@svgdotjs/svg.js": "^3.1.2",

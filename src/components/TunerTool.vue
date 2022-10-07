@@ -1,0 +1,233 @@
+<template>
+  <div>
+    <!-- <q-item v-if="toggleTones" dense class="q-mt-xl q-mr-lg absolute-top-right">
+      <q-item-section>
+        <q-icon name="notifications_active" color="accent" size="lg" />
+      </q-item-section>
+      <q-item-section class="text-accent text-subtitle1">
+        Tones Enabled
+      </q-item-section>
+    </q-item> -->
+  <TunerMenuLG class="gt-xs" :app="app" />
+  <!-- <TunerMenuSM class="lt-sm" :app="app" /> -->
+    <canvas class="frequency-bars"></canvas>
+    <div class="meter">
+      <div class="meter-dot"></div>
+      <div class="meter-pointer"></div>
+    </div>
+    <div class="notes">
+      <div class="notes-list"></div>
+      <div class="frequency text-h5"><span></span>Hz</div>
+      <div>
+        <q-btn
+          class="q-ma-md"
+          color="accent"
+          @click="q = !q"
+          label="Errors"
+          icon="error"
+          v-if="info !== ''"
+          stacked
+          push
+          glossy
+          rounded
+        />
+
+        <q-dialog v-model="q">
+          <q-card>
+            <q-card-section>
+              <div class="text-h5">Error:</div>
+            </q-card-section>
+            <q-card-section style="max-height: 60vh; max-width: 90vw">
+              <div v-html="info" />
+              <!-- <div v-id="infoMessage">{{ getQ($q) }}</div> -->
+            </q-card-section>
+          </q-card>
+        </q-dialog>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+document.addEventListener(
+  "deviceready",
+  () => {
+    console.log("deviceready");
+  },
+  false
+);
+import { Application, DEBUG_INFO } from "../middleware/tools/tuner.js"
+
+export default {
+  name: "TunerTool",
+  props: {
+    toggleMenu: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => ({
+    app: null,
+    q: false,
+    info: DEBUG_INFO,
+  }),
+  components: {
+    TunerMenuLG: () => import('./TunerMenuLG.vue'),
+    // TunerMenuSM: () => import('./TunerMenuSm.vue')
+    },
+  mounted() {
+    // console.log("mounted");
+    this.app = new Application(this.$q.platform.is.ios);
+    this.app.start();
+    this.$emit('app-loaded', this.app); // emit event to parent
+  },
+};
+</script>
+
+<style>
+html {
+  height: 100%;
+}
+
+body {
+  position: fixed;
+  font-family: sans-serif;
+  color: #2c3e50;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.notes {
+  margin: auto;
+  width: 400px;
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.note {
+  font-size: 90px;
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+  padding-right: 30px;
+  padding-left: 10px;
+}
+
+.note.active {
+  color: #ef6c00;
+}
+
+.notes-list {
+  overflow: auto;
+  overflow: -moz-scrollbars-none;
+  white-space: nowrap;
+  -ms-overflow-style: none;
+  -webkit-mask-image: -webkit-linear-gradient(
+    left,
+    rgba(255, 255, 255, 0),
+    #fff,
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.notes-list::-webkit-scrollbar {
+  display: none;
+}
+
+.note {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.note span {
+  position: absolute;
+  right: 0.25em;
+  font-size: 40%;
+  font-weight: normal;
+}
+
+.note-sharp {
+  top: 0.3em;
+}
+
+.note-octave {
+  bottom: 0.3em;
+}
+
+/* .frequency {
+  font-size: 32px;
+} */
+
+/* .frequency span {
+  font-size: 50%;
+  margin-left: 0.25em;
+} */
+
+.meter {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  width: 400px;
+  height: 33%;
+  margin: 0 auto 5vh auto;
+}
+
+.meter-pointer {
+  width: 2px;
+  height: 100%;
+  background: #2c3e50;
+  transform: rotate(45deg);
+  transform-origin: bottom;
+  transition: transform 0.5s;
+  position: absolute;
+  right: 50%;
+}
+
+.meter-dot {
+  width: 10px;
+  height: 10px;
+  background: #2c3e50;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -5px;
+  right: 50%;
+  margin-right: -4px;
+}
+
+.meter-scale {
+  width: 1px;
+  height: 100%;
+  transform-origin: bottom;
+  transition: transform 0.2s;
+  box-sizing: border-box;
+  border-top: 10px solid;
+  position: absolute;
+  right: 50%;
+}
+
+.meter-scale-strong {
+  width: 2px;
+  border-top-width: 20px;
+}
+
+.frequency-bars {
+  position: fixed;
+  bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .meter {
+    width: 100%;
+  }
+
+  .notes {
+    width: 100%;
+  }
+}
+</style>
