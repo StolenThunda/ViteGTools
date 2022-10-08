@@ -115,14 +115,14 @@
             type="number"
             v-model="tempo"
             size="4"
-            :disabled="bIsRunning"
+            :disabled="bIsRunning "
           />
         </div>
         <button
           class="control-bar-button"
           id="play"
           @click="toggleRun()"
-          :disabled="comboCount === 0 && bIsRunning"
+          :disabled="comboCount === 0 && !bIsRunning"
           :active="bIsRunning"
         >
         <i v-if="bIsRunning" class="fa fa-pause"></i>
@@ -266,6 +266,14 @@ export default {
     tempo: 150,
     stringSpacing: 18.8,
     stringOffset: -3.5,
+    stringDefaults: {
+      string1: 3,
+      string2: 21.8,
+      string3: 40.6,
+      string4: 59.4,
+      string5: 78.2,
+      string6: 96
+    },
     dotStrings: null,
     dotDirections: null,
     allCombinations: opts,
@@ -326,11 +334,19 @@ export default {
     this.tockSound = new Howl( {
       src: ['/tock-sound.mp3']
     } );
-    this.reset();
+    // .setStringDefaults()
+    this
+      .reset();
 
   },
   methods: {
     // Utility
+    setStringDefaults () {
+      for ( const [k, v] of Object.entries( this.stringDefaults ) ) {
+        document.querySelector(`#${k}`).style.top = `${v}%`
+      }
+      return this;
+    },
     getComboIdxFromName ( name ) {
       return name.split('-')[1]
     },
@@ -398,14 +414,11 @@ export default {
       }
     },
     initialize () {
+
       //update the dots to match the first combination.
       this
         .setDotStates()
         .setDotsFirstPosition()
-
-      //setup the countdown cycle
-      this.nCountdownCycle = 7;
-      this.nRestCycle = 7;
       return true;
     },
     pause () {
@@ -415,11 +428,11 @@ export default {
     },
     stop () {
       clearInterval( this.nTimerID );
+      this.nTimerID = null;
       this.bIsPaused = false;
       this.bIsRunning = false;
-      this.nTimerID = null;
-      this.reset();
       this.setMessage( '' );
+      // this.reset();
     },
     updateCombinationMessage () {
       this.setMessage( this.getFormattedCombination( this.nCombinationIndex ) )
@@ -586,9 +599,6 @@ export default {
       // document.querySelectorAll( '.dot' ).forEach( el => {
       //   el.style.display = 'none';
       // })
-
-
-
       this.setDotsFirstPosition();
 
       this.setMessage( "" );
@@ -630,26 +640,23 @@ export default {
       let newTop = this.calculateTop( this.dotStrings[whichDot], whichDot );
       let newLeft = this.calculateLeft( whichDot );
 
-      console.log( 'b4', { top: theDot.style.top, left: theDot.style.left } )
+      // console.log( 'b4', { top: theDot.style.top, left: theDot.style.left } )
       theDot.style.top = `${newTop}px`;
       theDot.style.left = `${newLeft}px`;
-      console.log( 'after', { top: theDot.style.top, left: theDot.style.left } )
+      // console.log( 'after', { top: theDot.style.top, left: theDot.style.left } )
     },
     moveDotToString ( whichDot, whichString ) {
       let theDot = document.querySelector( `#dot${whichDot + 1}` )
       let newTop = this.calculateTop( whichString, whichDot );
       let newLeft = this.calculateLeft( whichDot );
-
-      // console.log( 'b4', { top: theDot.getBoundingClientRect().top, left: theDot.getBoundingClientRect().left } )
       theDot.style.top = `${newTop}px`;
       theDot.style.left = `${newLeft}px`;
-      // console.log( 'after', { top: theDot.style.top, left: theDot.style.left } )
-
     },
     calculateTop ( string, whichDot ) {
       var dotIndex = whichDot + 1;
-      var dotHeight = document.querySelector( `#dot${dotIndex}` ).clientHeight;
-      var stringTop = document.querySelector( `#string${string}` ).getBoundingClientRect().top;
+      var dotHeight = document.querySelector( `#dot${dotIndex}` ).offsetHeight;
+      var stringTop = document.querySelector( `#string${string}` ).offsetTop;
+      console.log( `#string${string} ${stringTop}` )
       var offsetTop = stringTop - ( dotHeight / 2.0 );
       return offsetTop;
     },
@@ -676,6 +683,7 @@ html {
   padding: 0;
   margin: 0;
   font-size: 100%;
+  box-sizing: border-box;
 }
 
 body {
