@@ -14,6 +14,14 @@
               id="sidebar-dropdown"
               v-model="showCombos"
             >
+            <q-item padding>
+              <q-btn
+              glossy
+              dense
+              label="All Combinations"
+              @click="checkAll"
+              />
+            </q-item>
               <div id="combinations">
                 <div id="combinationSelector">
                   <div class="row">
@@ -44,7 +52,7 @@
                           id="all-2"
                           v-model="all_2"
                           @change="checkSet(2, this.checked);"
-                        /><label for="all-2">All</label>
+                        />&nbsp;<label for="all-2">All</label>
                       </div>
                       <q-option-group
                         v-model="selectedCombinations"
@@ -62,7 +70,7 @@
                           id="all-3"
                           v-model="all_3"
                           @change="checkSet(3, this.checked);"
-                        /><label for="all-3">All</label>
+                        />&nbsp;<label for="all-3">All</label>
                       </div>
                       <q-option-group
                         v-model="selectedCombinations"
@@ -80,7 +88,7 @@
                           id="all-4"
                           v-model="all_4"
                           @change="checkSet(4, this.checked);"
-                        /><label for="all-4">All</label>
+                        />&nbsp;<label for="all-4">All</label>
                       </div>
                       <q-option-group
                         v-model="selectedCombinations"
@@ -254,14 +262,6 @@ export default {
     tempo: 150,
     stringSpacing: 18.8,
     stringOffset: -3.5,
-    stringDefaults: {
-      string1: 3,
-      string2: 21.8,
-      string3: 40.6,
-      string4: 59.4,
-      string5: 78.2,
-      string6: 96
-    },
     dotStrings: null,
     dotDirections: null,
     allCombinations: opts,
@@ -279,6 +279,7 @@ export default {
     tickSound: null,
     tockSound: null,
     showCombos: false,
+    bAllChecks: false,
     all_1: false,
     all_2: false,
     all_3: false,
@@ -322,9 +323,7 @@ export default {
     this.tockSound = new Howl( {
       src: ['/tock-sound.mp3']
     } );
-    // .setStringDefaults()
-    this
-      .reset();
+    this.reset();
 
   },
   methods: {
@@ -339,8 +338,20 @@ export default {
       return name.split('-')[1]
     },
     // UI
-    checkAll ( bIsChecked ) {
-      this.elComboChecks.forEach( el => el.checked = bIsChecked )
+    checkAll () {
+      this.bAllChecks = !this.bAllChecks;
+      // load selectedCombinations
+      if ( this.bAllChecks ) {
+        for ( let i = 0; i < this.allCombinations.length; i++ ){
+            this.selectedCombinations.push( `combo-${i}` )
+        }
+      } else {
+        this.selectedCombinations = [];
+      }
+      // 
+      for ( let i = 1; i <= 4; i++ ) {
+        this[`all_${i}`] = this.bAllChecks;
+      }
     },
     checkSet ( nIndex = 1, bChecked = true, obj = null ) {
       // get value for set "all"
