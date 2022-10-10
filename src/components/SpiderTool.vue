@@ -1,16 +1,8 @@
 <template>
 
   <q-page class="resting">
-    <div id="pageWrapper">
-      <div
-        id="topbar"
-        class="control-bar"
-      >
-        <div
-          class="control-bar-button dropdown"
-          id="combinationsToggle"
-          data-toggle="sidebar-dropdown"
-        >
+      <q-toolbar  inset>
+        <q-space />
           <q-btn
             icon="fa fa-check-square"
             flat
@@ -20,24 +12,21 @@
             <q-menu
               class="dropdown-pane dark large"
               id="sidebar-dropdown"
-              data-close-on-click="true"
-              data-close-on-click-inside="false"
-              data-dropdown
               v-model="showCombos"
             >
               <div id="combinations">
                 <div id="combinationSelector">
                   <div class="row">
-                    <div class="columns small-6 medium-3 q-px-md">
+                    <div class="columns small-6 medium-3 q-px-md ">
                       <div class="text-center">1st</div>
-                      <div class="non-breaking">
+                      <div class="non-breaking" >
                         <input
                           class="checkbox comboCategoryCheckbox"
                           type="checkbox"
                           id="all-1"
                           v-model="all_1"
                           @change="checkSet(1, this.checked, this);"
-                        /><label for="all-1">All</label>
+                        />&nbsp;<label for="all-1">All</label>
                       </div>
                       <q-option-group
                         v-model="selectedCombinations"
@@ -107,39 +96,39 @@
 
             </q-menu>
           </q-btn>
-        </div>
-        <div class="control-bar-input-wrapper">
-          <label>BPM:</label>
-          <input
+          <q-input
             id="tempo"
             type="number"
+            label="BPM"
             v-model="tempo"
             size="4"
-            :disabled="bIsRunning "
+            :disable="bIsRunning "
+            standout
+            dense
           />
-        </div>
-        <button
-          class="control-bar-button"
+        <q-btn
           id="play"
           @click="toggleRun()"
           :disabled="comboCount === 0 && !bIsRunning"
           :active="bIsRunning"
         >
-        <i v-if="bIsRunning" class="fa fa-pause"></i>
-        <i v-else class="fa fa-play"></i>
-      </button>
-        <button
-          class="control-bar-button"
+        <i v-show="bIsRunning" class="fa fa-pause"></i>
+        <i v-show="!bIsRunning" class="fa fa-play"></i>
+      </q-btn>
+        <q-btn
           id="stop"
-          onClick="stop();"
+          @click="stop"
           :disabled="!bIsRunning"
-        ><i class="fa fa-stop"></i></button>
+        >
+        <i class="fa fa-stop"></i>
+      </q-btn>
+      <q-space />
         <!-- <button class="control-bar-button" id="loop"><i class="fa fa-refresh"></i></button> -->
-      </div>
+      </q-toolbar>
 
       <div id="main">
         <div id="headerWrapper">
-          <div id="message">MESSAGE</div>
+          <div id="message"></div>
         </div>
         <div class="fretboard">
           <div class="fretboard-mask">
@@ -226,7 +215,6 @@
         </div>
 
       </div>
-    </div>
 
   </q-page>
 </template>
