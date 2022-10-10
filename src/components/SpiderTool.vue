@@ -1,234 +1,178 @@
 <template>
-
   <q-page class="resting">
-      <q-toolbar  inset>
-        <q-space />
-          <q-btn
-            icon="fa fa-check-square"
-            flat
-            :label="`(${comboCount})`"
-            :disabled="bIsRunning"
-          >
-            <q-menu
-              class="dropdown-pane dark large"
-              id="sidebar-dropdown"
-              v-model="showCombos"
-            >
+    <q-toolbar inset>
+      <q-space />
+      <q-btn
+        icon="fa fa-check-square"
+        flat
+        :label="comboCount > 0 ? `(${comboCount})`:''"
+        :disabled="bIsRunning"
+      >
+        <q-menu
+          class="dropdown-pane dark large"
+          id="sidebar-dropdown"
+          v-model="showCombos"
+        >
+          <q-list>
             <q-item padding>
-              <q-btn
-              glossy
-              dense
-              label="All Combinations"
-              @click="checkAll"
-              />
+              <q-item-section>
+                <q-item-label>Toggle all Combinations</q-item-label>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-toggle
+                  glossy
+                  dense
+                  checked-icon="check"
+                  color="green"
+                  unchecked-icon="clear"
+                  v-model="bAllChecks"
+                />
+              </q-item-section>
             </q-item>
-              <div id="combinations">
-                <div id="combinationSelector">
-                  <div class="row">
-                    <div class="columns small-6 medium-3 q-px-md ">
-                      <div class="text-center">1st</div>
-                      <div class="non-breaking" >
-                        <input
-                          class="checkbox comboCategoryCheckbox"
-                          type="checkbox"
-                          id="all-1"
-                          v-model="all_1"
-                          @change="checkSet(1, this.checked, this);"
-                        />&nbsp;<label for="all-1">All</label>
-                      </div>
-                      <q-option-group
-                        v-model="selectedCombinations"
-                        :options="chkOpts.slice(0, 6)"
-                        :class="`checkbox comboCheckbox finger-1`"
+            <q-separator inset dark />
+            <q-item id="combinations">
+              <div id="combinationSelector">
+                <div class="row">
+                  <div class="columns small-6 medium-3 q-px-md">
+                    <div class="text-center">1st</div>
+                    <div class="non-breaking">
+                      <input
+                        class="checkbox comboCategoryCheckbox"
                         type="checkbox"
-                      />
+                        id="all-1"
+                        v-model="all_1"
+                        @change="checkSet(1, this.checked, this)"
+                      />&nbsp;<label for="all-1">All</label>
                     </div>
-                    <div class="columns small-6 medium-3 q-px-md">
-                      <div class="text-center">2nd</div>
-                      <div class="non-breaking">
-                        <input
-                          class="checkbox comboCategoryCheckbox"
-                          type="checkbox"
-                          id="all-2"
-                          v-model="all_2"
-                          @change="checkSet(2, this.checked);"
-                        />&nbsp;<label for="all-2">All</label>
-                      </div>
-                      <q-option-group
-                        v-model="selectedCombinations"
-                        :options="chkOpts.slice(6, 12)"
-                        :class="`checkbox comboCheckbox finger-2`"
+                    <q-option-group
+                      v-model="selectedCombinations"
+                      :options="chkOpts.slice(0, 6)"
+                      :class="`checkbox comboCheckbox finger-1`"
+                      type="checkbox"
+                    />
+                  </div>
+                  <div class="columns small-6 medium-3 q-px-md">
+                    <div class="text-center">2nd</div>
+                    <div class="non-breaking">
+                      <input
+                        class="checkbox comboCategoryCheckbox"
                         type="checkbox"
-                      />
+                        id="all-2"
+                        v-model="all_2"
+                        @change="checkSet(2, this.checked)"
+                      />&nbsp;<label for="all-2">All</label>
                     </div>
-                    <div class="columns small-6 medium-3 q-px-md">
-                      <div class="text-center">3rd</div>
-                      <div class="non-breaking">
-                        <input
-                          class="checkbox comboCategoryCheckbox"
-                          type="checkbox"
-                          id="all-3"
-                          v-model="all_3"
-                          @change="checkSet(3, this.checked);"
-                        />&nbsp;<label for="all-3">All</label>
-                      </div>
-                      <q-option-group
-                        v-model="selectedCombinations"
-                        :options="chkOpts.slice(12, 18)"
-                        :class="`checkbox comboCheckbox finger-3`"
+                    <q-option-group
+                      v-model="selectedCombinations"
+                      :options="chkOpts.slice(6, 12)"
+                      :class="`checkbox comboCheckbox finger-2`"
+                      type="checkbox"
+                    />
+                  </div>
+                  <div class="columns small-6 medium-3 q-px-md">
+                    <div class="text-center">3rd</div>
+                    <div class="non-breaking">
+                      <input
+                        class="checkbox comboCategoryCheckbox"
                         type="checkbox"
-                      />
+                        id="all-3"
+                        v-model="all_3"
+                        @change="checkSet(3, this.checked)"
+                      />&nbsp;<label for="all-3">All</label>
                     </div>
-                    <div class="columns small-6 medium-3 q-px-md">
-                      <div class="text-center">4th</div>
-                      <div class="non-breaking">
-                        <input
-                          class="checkbox comboCategoryCheckbox"
-                          type="checkbox"
-                          id="all-4"
-                          v-model="all_4"
-                          @change="checkSet(4, this.checked);"
-                        />&nbsp;<label for="all-4">All</label>
-                      </div>
-                      <q-option-group
-                        v-model="selectedCombinations"
-                        :options="chkOpts.slice(18)"
-                        :class="`checkbox comboCheckbox finger-4`"
+                    <q-option-group
+                      v-model="selectedCombinations"
+                      :options="chkOpts.slice(12, 18)"
+                      :class="`checkbox comboCheckbox finger-3`"
+                      type="checkbox"
+                    />
+                  </div>
+                  <div class="columns small-6 medium-3 q-px-md">
+                    <div class="text-center">4th</div>
+                    <div class="non-breaking">
+                      <input
+                        class="checkbox comboCategoryCheckbox"
                         type="checkbox"
-                      />
+                        id="all-4"
+                        v-model="all_4"
+                        @change="checkSet(4, this.checked)"
+                      />&nbsp;<label for="all-4">All</label>
                     </div>
+                    <q-option-group
+                      v-model="selectedCombinations"
+                      :options="chkOpts.slice(18)"
+                      :class="`checkbox comboCheckbox finger-4`"
+                      type="checkbox"
+                    />
                   </div>
                 </div>
               </div>
-
-
-            </q-menu>
-          </q-btn>
-          <q-input
-            id="tempo"
-            type="number"
-            label="BPM"
-            v-model="tempo"
-            size="4"
-            :disable="bIsRunning "
-            standout
-            dense
-          />
-        <q-btn
-          id="play"
-          @click="toggleRun()"
-          :disabled="comboCount === 0 && !bIsRunning"
-          :active="bIsRunning"
-        >
+            </q-item>
+          </q-list>
+        </q-menu>
+      </q-btn>
+      <q-input
+        id="tempo"
+        type="number"
+        label="BPM"
+        v-model="tempo"
+        size="4"
+        :disable="bIsRunning"
+        standout
+        dense
+      />
+      <q-btn
+        id="play"
+        @click="toggleRun()"
+        :disabled="comboCount === 0 && !bIsRunning"
+        :active="bIsRunning"
+      >
         <i v-show="bIsRunning" class="fa fa-pause"></i>
         <i v-show="!bIsRunning" class="fa fa-play"></i>
       </q-btn>
-        <q-btn
-          id="stop"
-          @click="stop"
-          :disabled="!bIsRunning"
-        >
+      <q-btn id="stop" @click="stop" :disabled="!bIsRunning">
         <i class="fa fa-stop"></i>
       </q-btn>
       <q-space />
-        <!-- <button class="control-bar-button" id="loop"><i class="fa fa-refresh"></i></button> -->
-      </q-toolbar>
+      <!-- <button class="control-bar-button" id="loop"><i class="fa fa-refresh"></i></button> -->
+    </q-toolbar>
 
-      <div id="main">
-        <div id="headerWrapper">
-          <div id="message"></div>
-        </div>
-        <div class="fretboard">
-          <div class="fretboard-mask">
-            <div
-              class="string"
-              id="string1"
-            ></div>
-            <div
-              class="string"
-              id="string2"
-            ></div>
-            <div
-              class="string"
-              id="string3"
-            ></div>
-            <div
-              class="string"
-              id="string4"
-            ></div>
-            <div
-              class="string"
-              id="string5"
-            ></div>
-            <div
-              class="string"
-              id="string6"
-            ></div>
-            <div
-              class="fret"
-              id="fret1"
-            ></div>
-            <div
-              class="fret"
-              id="fret2"
-            ></div>
-            <div
-              class="fret"
-              id="fret3"
-            ></div>
-            <div
-              class="fret"
-              id="fret4"
-            ></div>
-            <div
-              class="fret"
-              id="fret5"
-            ></div>
-            <div
-              class="fret"
-              id="fret6"
-            ></div>
-            <div
-              class="fret"
-              id="fret7"
-            ></div>
-            <div
-              class="dot"
-              id="dot1"
-            >1</div>
-            <div
-              class="dot"
-              id="dot2"
-            >2</div>
-            <div
-              class="dot"
-              id="dot3"
-            >3</div>
-            <div
-              class="dot"
-              id="dot4"
-            >4</div>
-          </div>
-        </div>
-        <div id="progressBarWrapper">
-          <div
-            id="progressBar"
-            class="progress-wrapper"
-          >
-            <div
-              class="progress-indicator"
-              id="progressIndicator"
-            ></div>
-          </div>
-        </div>
-
+    <div id="main">
+      <div id="headerWrapper">
+        <div id="message"></div>
       </div>
-
+      <div class="fretboard">
+        <div class="fretboard-mask">
+          <div class="string" id="string1"></div>
+          <div class="string" id="string2"></div>
+          <div class="string" id="string3"></div>
+          <div class="string" id="string4"></div>
+          <div class="string" id="string5"></div>
+          <div class="string" id="string6"></div>
+          <div class="fret" id="fret1"></div>
+          <div class="fret" id="fret2"></div>
+          <div class="fret" id="fret3"></div>
+          <div class="fret" id="fret4"></div>
+          <div class="fret" id="fret5"></div>
+          <div class="fret" id="fret6"></div>
+          <div class="fret" id="fret7"></div>
+          <div class="dot" id="dot1">1</div>
+          <div class="dot" id="dot2">2</div>
+          <div class="dot" id="dot3">3</div>
+          <div class="dot" id="dot4">4</div>
+        </div>
+      </div>
+      <div id="progressBarWrapper">
+        <div id="progressBar" class="progress-wrapper">
+          <div class="progress-indicator" id="progressIndicator"></div>
+        </div>
+      </div>
+    </div>
   </q-page>
 </template>
 <script>
-import { ref } from 'vue'
-import { Howl, Howler } from 'howler';
+import { ref } from "vue";
+import { Howl, Howler } from "howler";
 
 const opts = [
   [1, 2, 3, 4],
@@ -254,23 +198,23 @@ const opts = [
   [4, 2, 1, 3],
   [4, 2, 3, 1],
   [4, 3, 1, 2],
-  [4, 3, 2, 1]
-]
+  [4, 3, 2, 1],
+];
 export default {
-  name: 'SpiderTool',
-  data: () => ( {
+  name: "SpiderTool",
+  data: () => ({
     tempo: 150,
     stringSpacing: 18.8,
     stringOffset: -3.5,
     dotStrings: null,
     dotDirections: null,
     allCombinations: opts,
-    selectedCombinations: ref( [] ),
+    selectedCombinations: ref([]),
     nRestCycle: null,
-    bRestFinished: false,
-    bIsRunning: false,
-    bIsPaused: false,
-    bCountdownFinished: false,
+    bRestFinished: ref(false),
+    bIsRunning: ref(false),
+    bIsPaused: ref(false),
+    bCountdownFinished: ref(false),
     nCountdownCycle: null,
     nCombinationIndex: null,
     nCombinationDotIndex: null,
@@ -278,275 +222,296 @@ export default {
     nTimerID: null,
     tickSound: null,
     tockSound: null,
-    showCombos: false,
-    bAllChecks: false,
-    all_1: false,
-    all_2: false,
-    all_3: false,
-    all_4: false,
-  } ),
+    showCombos: ref(false),
+    bAllChecks: ref(false),
+    all_1: ref(false),
+    all_2: ref(false),
+    all_3: ref(false),
+    all_4: ref(false),
+  }),
   watch: {
-    tempo ( _new ) {
-      let val = Math.max( 10, _new )
-      val = Math.min( 400, val )
-      return val
-    }
+    bAllChecks () {
+        console.log('changed')
+        this.checkAll()
+    },
+    tempo(_new) {
+      let val = Math.max(10, _new);
+      val = Math.min(400, val);
+      return val;
+    },
   },
   computed: {
-    timerDelay () {
-      return ( 60 / this.tempo ) * 1000
+    timerDelay() {
+      return (60 / this.tempo) * 1000;
     },
-    comboCount () {
-      return this.selectedCombinations.length
+    comboCount() {
+      return this.selectedCombinations.length;
     },
-    chkOpts () {
-      const options = []
-      opts.forEach( ( el, idx ) => {
+    chkOpts() {
+      const options = [];
+      opts.forEach((el, idx) => {
         let objOption = {
-          label: el.join( ' ' ),
+          label: el.join(" "),
           value: `combo-${idx}`,
-          id: `combo-${idx}`
-        }
-        options.push( objOption )
-      } )
+          id: `combo-${idx}`,
+        };
+        options.push(objOption);
+      });
       return options;
     },
-    currentCombo () {
-      let comboName = this.selectedCombinations[this.nCombinationIndex]
-      return this.allCombinations[this.getComboIdxFromName( comboName )]
-    }
+    currentCombo() {
+      let comboName = this.selectedCombinations[this.nCombinationIndex];
+      return this.allCombinations[this.getComboIdxFromName(comboName)];
+    },
   },
-  mounted () {
-    this.tickSound = new Howl( {
-      src: ["/tock-sound.mp3"]
-    } );
-    this.tockSound = new Howl( {
-      src: ['/tock-sound.mp3']
-    } );
+  mounted() {
+    this.tickSound = new Howl({
+      src: ["/tock-sound.mp3"],
+    });
+    this.tockSound = new Howl({
+      src: ["/tock-sound.mp3"],
+    });
     this.reset();
-
   },
   methods: {
-    // Utility
-    setStringDefaults () {
-      for ( const [k, v] of Object.entries( this.stringDefaults ) ) {
-        document.querySelector(`#${k}`).style.top = `${v}%`
-      }
-      return this;
-    },
-    getComboIdxFromName ( name ) {
-      return name.split('-')[1]
+    // Utility    
+    getComboIdxFromName(name) {
+      return name.split("-")[1];
     },
     // UI
-    checkAll () {
-      this.bAllChecks = !this.bAllChecks;
+    checkAll() {
       // load selectedCombinations
-      if ( this.bAllChecks ) {
-        for ( let i = 0; i < this.allCombinations.length; i++ ){
-            this.selectedCombinations.push( `combo-${i}` )
+      if (this.bAllChecks) {
+        for (let i = 0; i < this.allCombinations.length; i++) {
+          this.selectedCombinations.push(`combo-${i}`);
         }
       } else {
         this.selectedCombinations = [];
       }
-      // 
-      for ( let i = 1; i <= 4; i++ ) {
+      //
+      for (let i = 1; i <= 4; i++) {
         this[`all_${i}`] = this.bAllChecks;
       }
     },
-    checkSet ( nIndex = 1, bChecked = true, obj = null ) {
+    checkSet(nIndex = 1, bChecked = true, obj = null) {
       // get value for set "all"
-      bChecked = this['all_' + nIndex]
+      bChecked = this["all_" + nIndex];
 
       // determine combo group
-      let end = 6 * nIndex
-      let start = end - 6
+      let end = 6 * nIndex;
+      let start = end - 6;
 
-      for ( let i = start; i < end; i++ ) {
+      for (let i = start; i < end; i++) {
         // get id for checkboxes
-        let combo = `combo-${i}`
+        let combo = `combo-${i}`;
         // toggle selection
-        if ( bChecked ) {
-          this.selectedCombinations.push( combo )
+        if (bChecked) {
+          this.selectedCombinations.push(combo);
         } else {
-          this.selectedCombinations = this.selectedCombinations.filter( el => el === combo )
+          this.selectedCombinations = this.selectedCombinations.filter(
+            (el) => el === combo
+          );
         }
       }
     },
-    updateProgress () {
+    updateProgress() {
       let nCurrentIndex = this.nCombinationIndex;
       let nTotalCount = this.selectedCombinations.length;
-      if ( nTotalCount > 0 ) {
-        let comboPercentage = parseFloat( ( nCurrentIndex / nTotalCount ) * 100 );
-        let stringPercentage = ( this.nStringIndex - 1 ) * ( ( 100 / nTotalCount ) * .1 );
+      if (nTotalCount > 0) {
+        let comboPercentage = parseFloat((nCurrentIndex / nTotalCount) * 100);
+        let stringPercentage =
+          (this.nStringIndex - 1) * ((100 / nTotalCount) * 0.1);
 
         let nPercent = comboPercentage + stringPercentage;
-        document.querySelector( '#progressIndicator' ).style.width = `${nPercent}%`;
-
+        document.querySelector(
+          "#progressIndicator"
+        ).style.width = `${nPercent}%`;
       }
     },
-    getFormattedCombination ( nIndex = 0 ) {
-      if ( nIndex > this.selectedCombinations.length - 1 ) return '';
-      let nComboIndex = this.selectedCombinations[nIndex].split( '-' )[1]
-      return opts[nComboIndex].join('-')
+    getFormattedCombination(nIndex = 0) {
+      if (nIndex > this.selectedCombinations.length - 1) return "";
+      let nComboIndex = this.selectedCombinations[nIndex].split("-")[1];
+      return opts[nComboIndex].join("-");
     },
-    setMessage ( strMessage ) { document.querySelector( '#message' ).innerHTML = strMessage; },
+    setMessage(strMessage) {
+      document.querySelector("#message").innerHTML = strMessage;
+    },
     // Functional
-    playClick ( tickOrTock ) {
-      if ( tickOrTock == 0 ) { this.tickSound.play(); }
-      else { this.tockSound.play(); }
+    playClick(tickOrTock) {
+      if (tickOrTock == 0) {
+        this.tickSound.play();
+      } else {
+        this.tockSound.play();
+      }
     },
-    toggleRun () {
-      if ( !this.bIsRunning ) { this.run(); }
-      else { this.pause(); }
+    toggleRun() {
+      if (!this.bIsRunning) {
+        this.run();
+      } else {
+        this.pause();
+      }
     },
-    run () {
-
+    run() {
       //retrieve the list of combinations
-      if ( this.comboCount == 0 ) { return; }
-      if ( this.initialize() ) {
+      if (this.comboCount == 0) {
+        return;
+      }
+      if (this.initialize()) {
         this.bIsRunning = true;
         this.bCountingDown = true;
         this.nCountdownCycle = 7;
         this.isCountingDown = true;
         this.updateProgress();
-        this.nTimerID = setInterval( this.updateCallback, this.timerDelay );
+        this.nTimerID = setInterval(this.updateCallback, this.timerDelay);
       }
     },
-    initialize () {
-
+    initialize() {
       //update the dots to match the first combination.
-      this
-        .setDotStates()
-        .setDotsFirstPosition()
+      this.setDotStates().setDotsFirstPosition();
       return true;
     },
-    pause () {
+    pause() {
       this.bIsPaused = true;
       this.bIsRunning = false;
-      clearInterval( this.nTimerID );
+      clearInterval(this.nTimerID);
     },
-    stop () {
-      clearInterval( this.nTimerID );
+    stop() {
+      clearInterval(this.nTimerID);
       this.nTimerID = null;
       this.bIsPaused = false;
       this.bIsRunning = false;
-      this.setMessage( '' );
+      this.setMessage("");
       // this.reset();
     },
-    updateCombinationMessage () {
-      this.setMessage( this.getFormattedCombination( this.nCombinationIndex ) )
+    updateCombinationMessage() {
+      this.setMessage(this.getFormattedCombination(this.nCombinationIndex));
     },
-    updateCallback () {
-
+    updateCallback() {
       //Determine if we are counting down
-      if ( !this.bCountdownFinished ) {
+      if (!this.bCountdownFinished) {
         // The countdown has not been finished,
 
-        if ( this.nCountdownCycle == 0 ) {
-
+        if (this.nCountdownCycle == 0) {
           let messageString = `
-            Get Ready... ${this.nCountdownCycle + 1 } <br/>
-            <small>Next: ${this.getFormattedCombination( this.nCombinationIndex + 1 )}</small>`;
-          this.setMessage( messageString );
-          this.playClick( this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1 );
+            Get Ready... ${this.nCountdownCycle + 1} <br/>
+            <small>Next: ${this.getFormattedCombination(
+              this.nCombinationIndex + 1
+            )}</small>`;
+          this.setMessage(messageString);
+          this.playClick(
+            this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1
+          );
           // We've reached the end of the countdown.
           this.bCountdownFinished = true;
           this.nCountdownCycle = 7;
-          if ( this.nCombinationIndex == -1 ) {
+          if (this.nCombinationIndex == -1) {
             this.nCombinationIndex == 0;
           }
           return;
-        }
-        else {
+        } else {
           // We're still counting down, update the status
           let messageString = `Get Ready... ${this.nCountdownCycle + 1}`;
-          if ( this.nCombinationIndex == 0 ) {
-            messageString += `<br/><small>Start With: ${this.getFormattedCombination( this.nCombinationIndex )}</small>`;
+          if (this.nCombinationIndex == 0) {
+            messageString += `<br/><small>Start With: ${this.getFormattedCombination(
+              this.nCombinationIndex
+            )}</small>`;
+          } else {
+            messageString += `<br/><small>Next: ${this.getFormattedCombination(
+              this.nCombinationIndex + 1
+            )}</small>`;
           }
-          else {
-            messageString += `<br/><small>Next: ${this.getFormattedCombination( this.nCombinationIndex + 1 )}</small>`;
-          }
-          this.setMessage( messageString );
-          this.playClick( this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1 );
+          this.setMessage(messageString);
+          this.playClick(
+            this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1
+          );
           this.nCountdownCycle--;
           return;
         }
-      }
-      else {
+      } else {
         // Countdown is over, now we're moving dots
 
         // Have we moved all the dots onto the current string?
         // (This matters because we don't really have to do much if we haven't)
-        if ( this.nCombinationDotIndex < 3 ) {
+        if (this.nCombinationDotIndex < 3) {
           this.nCombinationDotIndex++;
 
           // No, all the dots are not yet onto this string.
-          if ( this.nStringIndex == 1 && this.nCombinationDotIndex == 0 ) {
-            document.querySelector( 'body' ).classList.toggle( 'resting', false );
+          if (this.nStringIndex == 1 && this.nCombinationDotIndex == 0) {
+            document.querySelector("body").classList.toggle("resting", false);
             this.updateCombinationMessage();
           }
-        }
-        else {
+        } else {
           // Yes, all the dots are on this string.
 
           // Are we on the last string?
-          if ( this.nStringIndex == 10 ) {
+          if (this.nStringIndex == 10) {
             // Yes, we are on the last string
 
             // Is this the last combination in the list?
-            if ( this.nCombinationIndex == this.selectedCombinations.length - 1 ) {
+            if (
+              this.nCombinationIndex ==
+              this.selectedCombinations.length - 1
+            ) {
               // Yes, this is the final combination, and we have finished the final string . We are done.
 
               this.updateProgress();
-              document.querySelector( '#progressIndicator' ).style.width = '100%';
+              document.querySelector("#progressIndicator").style.width = "100%";
               this.nStringIndex = 0;
               this.nCombinationIndex = 0;
               this.nCombinationDotIndex = 0;
-              clearInterval( this.nTimerID );
+              clearInterval(this.nTimerID);
               this.stop();
-              this.setMessage( 'Done' );
+              this.setMessage("Done");
               return;
-            }
-            else if ( this.nCombinationIndex < this.selectedCombinations.length - 1 ) {
+            } else if (
+              this.nCombinationIndex <
+              this.selectedCombinations.length - 1
+            ) {
               // No, this is not the last combination, but we have reached the last string.
               // At this point we need to initiate a rest, and when that rest is over, advance to
               // the next combination.
 
-
               // Determine if we should be resting
-              if ( !this.bRestFinished ) {
+              if (!this.bRestFinished) {
                 // Our rest is not finished.
 
-                if ( this.nRestCycle == 0 ) {
+                if (this.nRestCycle == 0) {
                   // Our rest is finished.
                   var restString = `Rest... ${this.nRestCycle + 1}<br/>
-                  <small>Next: ${this.getFormattedCombination( this.nCombinationIndex + 1 )}</small>`;
-                  this.setMessage( restString );
-                  this.playClick( 1 );
+                  <small>Next: ${this.getFormattedCombination(
+                    this.nCombinationIndex + 1
+                  )}</small>`;
+                  this.setMessage(restString);
+                  this.playClick(1);
                   this.bRestFinished = true;
                   this.nRestCycle = 7;
                   return;
-                }
-                else {
-                  if ( this.nRestCycle == 7 ) {
-                    this.setDotStates( 1 );
-                    document.querySelector( 'body' ).classList.toggle( 'resting', true );
+                } else {
+                  if (this.nRestCycle == 7) {
+                    this.setDotStates(1);
+                    document
+                      .querySelector("body")
+                      .classList.toggle("resting", true);
                   }
-                  this.playClick( ( this.nRestCycle == 7 || this.nRestCycle == 3 ) ? 0 : 1 );
-                  var restString = `Rest... ${this.nRestCycle + 1 }<br/>
-                  <small>Next: ${this.getFormattedCombination( this.nCombinationIndex + 1 )}</small>`;
-                  this.setMessage( restString );
+                  this.playClick(
+                    this.nRestCycle == 7 || this.nRestCycle == 3 ? 0 : 1
+                  );
+                  var restString = `Rest... ${this.nRestCycle + 1}<br/>
+                  <small>Next: ${this.getFormattedCombination(
+                    this.nCombinationIndex + 1
+                  )}</small>`;
+                  this.setMessage(restString);
 
                   this.nRestCycle--;
                   return;
                 }
-
-              }
-              else {
+              } else {
                 // The rest has finished, let's reset it. We won't hit this again until it's time to rest again.
                 this.bRestFinished = false;
                 this.nRestCycle = 7;
-                document.querySelector( 'body' ).classList.toggle( 'resting', false );
+                document
+                  .querySelector("body")
+                  .classList.toggle("resting", false);
 
                 // Now we advance the combination index.
                 this.nCombinationIndex++;
@@ -563,8 +528,7 @@ export default {
                 this.updateCombinationMessage();
               }
             }
-          }
-          else if ( this.nStringIndex < 10 ) {
+          } else if (this.nStringIndex < 10) {
             // We've hit the last dot, but we're not on the last string.
             this.nStringIndex++;
             this.updateProgress();
@@ -572,13 +536,12 @@ export default {
           }
         }
 
-
         let whichDot = this.currentCombo[this.nCombinationDotIndex] - 1;
-        this.playClick( this.nCombinationDotIndex );
-        this.moveDot( whichDot );
+        this.playClick(this.nCombinationDotIndex);
+        this.moveDot(whichDot);
       }
     },
-    reset () {
+    reset() {
       this.dotStrings = [1, 1, 1, 1];
       this.dotDirections = [1, 1, 1, 1];
       this.nCombinationIndex = 0;
@@ -591,90 +554,98 @@ export default {
       this.nCountdownCycle = 7;
       this.bCountdownFinished = false;
 
-      document.querySelector( '.first' )?.classList.toggle( 'first', false );
-      document.querySelector( '.second' )?.classList.toggle( 'second', false );
-      document.querySelector( '.third' )?.classList.toggle( 'third', false );
-      document.querySelector( '.fourth' )?.classList.toggle( 'fourth', false );
+      document.querySelector(".first")?.classList.toggle("first", false);
+      document.querySelector(".second")?.classList.toggle("second", false);
+      document.querySelector(".third")?.classList.toggle("third", false);
+      document.querySelector(".fourth")?.classList.toggle("fourth", false);
       // document.querySelectorAll( '.dot' ).forEach( el => {
       //   el.style.display = 'none';
       // })
       this.setDotsFirstPosition();
 
-      this.setMessage( "" );
-    this.updateCombinationMessage();
+      this.setMessage("");
+      this.updateCombinationMessage();
     },
-    setDotStates ( nOffset = 0 ) {
-      let selected = this.selectedCombinations[this.nCombinationIndex + nOffset];
-      let activeCombination = opts[selected.split('-')[1]]
+    setDotStates(nOffset = 0) {
+      let selected =
+        this.selectedCombinations[this.nCombinationIndex + nOffset];
+      let activeCombination = opts[selected.split("-")[1]];
       //$('.dot').fadeTo( 200, .5, function(){
-      document.querySelectorAll( '.dot' ).forEach( el => {
+      document.querySelectorAll(".dot").forEach((el) => {
         el.style.display = "block";
-      })
-      document.querySelector( '.first' )?.classList.toggle( 'first', false );
-      document.querySelector( '.second' )?.classList.toggle( 'second', false );
-      document.querySelector( '.third' )?.classList.toggle( 'third', false );
-      document.querySelector( '.fourth' )?.classList.toggle( 'fourth', false );
-      document.querySelector( '#dot' + activeCombination[0] )?.classList.toggle( 'first' );
-      document.querySelector( '#dot' + activeCombination[1] )?.classList.toggle( 'second' );
-      document.querySelector( '#dot' + activeCombination[2] )?.classList.toggle( 'third' );
-      document.querySelector( '#dot' + activeCombination[3] )?.classList.toggle( 'fourth' );
+      });
+      document.querySelector(".first")?.classList.toggle("first", false);
+      document.querySelector(".second")?.classList.toggle("second", false);
+      document.querySelector(".third")?.classList.toggle("third", false);
+      document.querySelector(".fourth")?.classList.toggle("fourth", false);
+      document
+        .querySelector("#dot" + activeCombination[0])
+        ?.classList.toggle("first");
+      document
+        .querySelector("#dot" + activeCombination[1])
+        ?.classList.toggle("second");
+      document
+        .querySelector("#dot" + activeCombination[2])
+        ?.classList.toggle("third");
+      document
+        .querySelector("#dot" + activeCombination[3])
+        ?.classList.toggle("fourth");
       //	$('.dot').fadeTo( 800, 1.0 );
       //});
       return this;
     },
-    setDotsFirstPosition () {
-      this.moveDotToString( 0, 1 );
-      this.moveDotToString( 1, 1 );
-      this.moveDotToString( 2, 1 );
-      this.moveDotToString( 3, 1 );
+    setDotsFirstPosition() {
+      this.moveDotToString(0, 1);
+      this.moveDotToString(1, 1);
+      this.moveDotToString(2, 1);
+      this.moveDotToString(3, 1);
     },
-    moveDot ( whichDot ) {
+    moveDot(whichDot) {
       // determine string/direction
       this.dotStrings[whichDot] += this.dotDirections[whichDot];
-      if ( this.dotStrings[whichDot] == 6 || this.dotStrings[whichDot] == 1 ) {
+      if (this.dotStrings[whichDot] == 6 || this.dotStrings[whichDot] == 1) {
         this.dotDirections[whichDot] *= -1;
       }
 
-      let theDot = document.querySelector( `#dot${whichDot + 1}` )
-      let newTop = this.calculateTop( this.dotStrings[whichDot], whichDot );
-      let newLeft = this.calculateLeft( whichDot );
+      let theDot = document.querySelector(`#dot${whichDot + 1}`);
+      let newTop = this.calculateTop(this.dotStrings[whichDot], whichDot);
+      let newLeft = this.calculateLeft(whichDot);
 
-      // console.log( 'b4', { top: theDot.style.top, left: theDot.style.left } )
-      theDot.style.top = `${newTop}px`;
-      theDot.style.left = `${newLeft}px`;
-      // console.log( 'after', { top: theDot.style.top, left: theDot.style.left } )
-    },
-    moveDotToString ( whichDot, whichString ) {
-      let theDot = document.querySelector( `#dot${whichDot + 1}` )
-      let newTop = this.calculateTop( whichString, whichDot );
-      let newLeft = this.calculateLeft( whichDot );
       theDot.style.top = `${newTop}px`;
       theDot.style.left = `${newLeft}px`;
     },
-    calculateTop ( string, whichDot ) {
+    moveDotToString(whichDot, whichString) {
+      let theDot = document.querySelector(`#dot${whichDot + 1}`);
+      let newTop = this.calculateTop(whichString, whichDot);
+      let newLeft = this.calculateLeft(whichDot);
+      theDot.style.top = `${newTop}px`;
+      theDot.style.left = `${newLeft}px`;
+    },
+    calculateTop(string, whichDot) {
       var dotIndex = whichDot + 1;
-      var dotHeight = document.querySelector( `#dot${dotIndex}` ).offsetHeight;
-      var stringTop = document.querySelector( `#string${string}` ).offsetTop;
-      console.log( `#string${string} ${stringTop}` )
-      var offsetTop = stringTop - ( dotHeight / 2.0 );
+      var dotHeight = document.querySelector(`#dot${dotIndex}`).offsetHeight;
+      var stringTop = document.querySelector(`#string${string}`).offsetTop;
+      var offsetTop = stringTop - dotHeight / 2.0;
       return offsetTop;
     },
-    calculateLeft ( whichDot ) {
+    calculateLeft(whichDot) {
       let dotIndex = whichDot + 1;
       let rightFret = dotIndex + 2;
       let leftFret = dotIndex + 1;
-      let leftSide = document.querySelector( `#fret${leftFret}` ).getBoundingClientRect().left;
-      let rightSide = document.querySelector( `#fret${rightFret}` ).getBoundingClientRect().left;
+      let leftSide = document
+        .querySelector(`#fret${leftFret}`)
+        .getBoundingClientRect().left;
+      let rightSide = document
+        .querySelector(`#fret${rightFret}`)
+        .getBoundingClientRect().left;
       let gapWidth = rightSide - leftSide;
-      let centerLine = leftSide + ( gapWidth / 2.0 );
-      let dotWidth = document.querySelector( `#dot${dotIndex}` ).offsetWidth;
-      let offsetLeft = centerLine - ( dotWidth / 2.0 );
+      let centerLine = leftSide + gapWidth / 2.0;
+      let dotWidth = document.querySelector(`#dot${dotIndex}`).offsetWidth;
+      let offsetLeft = centerLine - dotWidth / 2.0;
       return offsetLeft;
-
     },
-
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -686,7 +657,6 @@ html {
 }
 
 body {
-
   font-family: Helvetica, Verdana, Sans-serif;
   color: white;
   font-weight: 400;
@@ -700,7 +670,7 @@ body {
 }
 
 #main {
-  font-family: 'Audiowide', cursive;
+  font-family: "Audiowide", cursive;
   position: absolute;
   width: 100%;
   left: 0;
@@ -721,9 +691,8 @@ body {
   border-top: 2px solid #777;
   border-bottom: 2px solid #777;
   box-shadow: 0px 5px 20px #222;
-  transition: opacity .3s, background-color .5s;
+  transition: opacity 0.3s, background-color 0.5s;
 }
-
 
 .string {
   position: absolute;
@@ -737,33 +706,33 @@ body {
 
 .string#string1 {
   top: 3%;
-  height: .25vmin;
+  height: 0.25vmin;
   min-height: 1px;
 }
 
 .string#string2 {
   top: 21.8%;
-  height: .35vmin;
+  height: 0.35vmin;
 }
 
 .string#string3 {
   top: 40.6%;
-  height: .35vmin;
+  height: 0.35vmin;
 }
 
 .string#string4 {
   top: 59.4%;
-  height: .5vmin;
+  height: 0.5vmin;
 }
 
 .string#string5 {
   top: 78.2%;
-  height: .5vmin;
+  height: 0.5vmin;
 }
 
 .string#string6 {
   top: 96%;
-  height: .65vmin;
+  height: 0.65vmin;
 }
 
 .fret {
@@ -789,7 +758,7 @@ body {
 }
 
 #fret4 {
-  left: 50%
+  left: 50%;
 }
 
 #fret5 {
@@ -820,29 +789,24 @@ body {
   box-shadow: 1px 1px 5px #222;
   border: none;
   display: none;
-  transition: transform 1s, opacity .25s, top .1s, background-color 1s;
+  transition: transform 1s, opacity 0.25s, top 0.1s, background-color 1s;
 }
 
 #dot1 {
   left: 24.5%;
-
 }
-
 
 #dot2 {
   left: 40.5%;
 }
 
-
 #dot3 {
   left: 56%;
 }
 
-
 #dot4 {
   left: 72.3%;
 }
-
 
 .first {
   background: #0066ff;
@@ -855,7 +819,7 @@ body {
   background: #0066ff;
   color: #ddd;
   border: 2px solid #ddd;
-  transform: scale(.9);
+  transform: scale(0.9);
 }
 
 .third {
@@ -869,15 +833,13 @@ body {
   background: #999 !important;
   color: white;
   border: 2px solid #ddd;
-  transform: scale(.8);
+  transform: scale(0.8);
 }
-
 
 label {
   display: inline-block;
   color: white;
 }
-
 
 .non-breaking {
   white-space: nowrap;
@@ -937,8 +899,6 @@ input[type=checkbox].comboCategoryCheckbox+label
 	font-weight: 900;
 } */
 
-
-
 #headerWrapper {
   width: 100%;
   height: 25%;
@@ -951,11 +911,10 @@ input[type=checkbox].comboCategoryCheckbox+label
   position: relative;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 5.0vmin;
+  font-size: 5vmin;
   text-align: center;
   line-height: 1em;
   font-family: Audiowide;
-
 }
 
 #message small {
@@ -983,9 +942,8 @@ button {
   border: none;
   line-height: 2.4em;
   cursor: pointer;
-  font-size: .7rem;
+  font-size: 0.7rem;
   padding: 0 1em;
-  ;
   font-family: Helvetica;
   color: white;
   border-radius: 3px;
@@ -1009,11 +967,11 @@ button:hover {
 body.resting .string,
 body.resting .fret,
 body.resting .inlay {
-  opacity: .4;
+  opacity: 0.4;
 }
 
 body.resting .dot {
-  opacity: .95;
+  opacity: 0.95;
 }
 
 body.resting .fretboard {
@@ -1078,7 +1036,7 @@ body.resting .fretboard {
   width: 0%;
   height: 2rem;
   box-shadow: 2px 0px 15px #333, inset -5px 5px 10px #7bf;
-  transition: width .25s;
+  transition: width 0.25s;
 }
 
 #topbar {
@@ -1098,13 +1056,12 @@ body.resting .fretboard {
   font-size: 0;
 }
 
-
 .control-bar-input-wrapper,
 .control-bar-button {
   display: inline-block;
   height: 3rem;
   line-height: 3rem;
-  font-size: .9rem;
+  font-size: 0.9rem;
   padding: 0 1.5rem;
   border-radius: 0px;
   box-sizing: border-box;
@@ -1143,22 +1100,18 @@ body.resting .fretboard {
   background: #0af;
 }
 
-
 #combinationCount {
-  font-size: .8rem;
+  font-size: 0.8rem;
   vertical-align: top;
-  margin-left: .25rem;
-  margin-top: -.25rem;
+  margin-left: 0.25rem;
+  margin-top: -0.25rem;
   display: inline-block;
 }
 
-
-
 @media (min-width: 0px) {
   .control-bar-button {
-    font-size: .9rem;
+    font-size: 0.9rem;
     padding: 0 1rem;
   }
-
 }
 </style>

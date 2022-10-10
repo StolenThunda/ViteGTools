@@ -28,7 +28,7 @@
         <q-item-label
           header
         >
-          Essential Links
+          Tools
         </q-item-label>
 
         <ToolLink
