@@ -36,11 +36,6 @@
           :key="link.title"
           v-bind="link"
         />
-        <!-- <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        /> -->
       </q-list>
     </q-drawer>
 
@@ -59,19 +54,19 @@ const linksList = [
   {
     title: 'Fretboard Navigator',
     caption: 'Scales, "Boxes" and More',
-    icon: 'pattern',
+    icon: 'mdi-car-shift-pattern',
     link: '/fretboard'
   },
   {
     title: 'Spider Tool',
     caption: 'Finger strengthening and dexterity',
-    icon: 'fa-bug',
+    icon: 'mdi-spider',
     link: '/spider'
   },
   {
     title: 'Tuner',
     caption: 'Tuner',
-    icon: 'metronome',
+    icon: 'mdi-tune',
     link: '/tuner'
   }
 ]

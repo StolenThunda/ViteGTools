@@ -2,15 +2,8 @@
 
   <q-page class="resting">
     <div id="pageWrapper">
-      <div
-        id="topbar"
-        class="control-bar"
-      >
-        <div
-          class="control-bar-button dropdown"
-          id="combinationsToggle"
-          data-toggle="sidebar-dropdown"
-        >
+      <q-toolbar  inset>
+        <q-space />
           <q-btn
             icon="fa fa-check-square"
             flat
@@ -107,39 +100,39 @@
 
             </q-menu>
           </q-btn>
-        </div>
-        <div class="control-bar-input-wrapper">
-          <label>BPM:</label>
-          <input
+          <q-input
             id="tempo"
             type="number"
+            label="BPM"
             v-model="tempo"
             size="4"
-            :disabled="bIsRunning "
+            :disable="bIsRunning "
+            standout
+            dense
           />
-        </div>
-        <button
-          class="control-bar-button"
+        <q-btn
           id="play"
           @click="toggleRun()"
           :disabled="comboCount === 0 && !bIsRunning"
           :active="bIsRunning"
         >
-        <i v-if="bIsRunning" class="fa fa-pause"></i>
-        <i v-else class="fa fa-play"></i>
-      </button>
-        <button
-          class="control-bar-button"
+        <i v-show="bIsRunning" class="fa fa-pause"></i>
+        <i v-show="!bIsRunning" class="fa fa-play"></i>
+      </q-btn>
+        <q-btn
           id="stop"
-          onClick="stop();"
+          @click="stop"
           :disabled="!bIsRunning"
-        ><i class="fa fa-stop"></i></button>
+        >
+        <i class="fa fa-stop"></i>
+      </q-btn>
+      <q-space />
         <!-- <button class="control-bar-button" id="loop"><i class="fa fa-refresh"></i></button> -->
-      </div>
+      </q-toolbar>
 
       <div id="main">
         <div id="headerWrapper">
-          <div id="message">MESSAGE</div>
+          <div id="message"></div>
         </div>
         <div class="fretboard">
           <div class="fretboard-mask">
