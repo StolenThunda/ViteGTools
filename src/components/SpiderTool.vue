@@ -220,8 +220,12 @@ export default {
     nCombinationDotIndex: null,
     nStringIndex: null,
     nTimerID: null,
-    tickSound: null,
-    tockSound: null,
+    tockSound: new Howl( {
+      src: ["/tock-sound.mp3"],
+    } ),
+    tickSound: new Howl( {
+      src: ["/tick-sound.mp3"],
+    } ),
     showCombos: ref(false),
     bAllChecks: ref(false),
     all_1: ref(false),
@@ -265,12 +269,6 @@ export default {
     },
   },
   mounted() {
-    this.tickSound = new Howl({
-      src: ["/tock-sound.mp3"],
-    });
-    this.tockSound = new Howl({
-      src: ["/tock-sound.mp3"],
-    });
     this.reset();
   },
   methods: {
