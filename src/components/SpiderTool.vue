@@ -4,7 +4,8 @@
       <q-space />
       <q-btn
         icon="fa fa-check-square"
-        flat
+        glossy
+        v-ripple
         :label="comboCount > 0 ? `(${comboCount})`:''"
         :disabled="bIsRunning"
       >
@@ -14,7 +15,7 @@
           v-model="showCombos"
         >
           <q-list>
-            <q-item padding>
+            <q-item>
               <q-item-section>
                 <q-item-label>Toggle all Combinations</q-item-label>
               </q-item-section>
@@ -29,7 +30,10 @@
                 />
               </q-item-section>
             </q-item>
-            <q-separator inset dark />
+            <q-separator
+              inset
+              dark
+            />
             <q-item id="combinations">
               <div id="combinationSelector">
                 <div class="row">
@@ -108,31 +112,45 @@
                 </div>
               </div>
             </q-item>
-          </q-list>
-        </q-menu>
-      </q-btn>
-      <q-input
-        id="tempo"
-        type="number"
-        label="BPM"
-        v-model="tempo"
-        size="4"
-        :disable="bIsRunning"
-        standout
-        dense
-      />
-      <q-btn
-        id="play"
-        @click="toggleRun()"
-        :disabled="comboCount === 0 && !bIsRunning"
-        :active="bIsRunning"
-      >
-        <i v-show="bIsRunning" class="fa fa-pause"></i>
-        <i v-show="!bIsRunning" class="fa fa-play"></i>
-      </q-btn>
-      <q-btn id="stop" @click="stop" :disabled="!bIsRunning">
-        <i class="fa fa-stop"></i>
-      </q-btn>
+            </q-list>
+            </q-menu>
+            </q-btn>
+            <q-input
+              id="tempo"
+              type="number"
+              label="BPM"
+              v-model="tempo"
+              size="4"
+              :disable="bIsRunning"
+              standout
+              dense
+            />
+            <q-btn
+              id="play"
+              @click="toggleRun()"
+              :disabled="comboCount === 0 && !bIsRunning"
+              :active="bIsRunning"
+              glossy
+              v-ripple
+            >
+              <i
+                v-show="bIsRunning"
+                class="fa fa-pause"
+              ></i>
+              <i
+                v-show="!bIsRunning"
+                class="fa fa-play"
+              ></i>
+            </q-btn>
+            <q-btn
+              glossy
+              v-ripple
+              id="stop"
+              @click="stop"
+              :disabled="!bIsRunning"
+            >
+              <i class="fa fa-stop"></i>
+            </q-btn>
       <q-space />
       <!-- <button class="control-bar-button" id="loop"><i class="fa fa-refresh"></i></button> -->
     </q-toolbar>
@@ -235,7 +253,6 @@ export default {
   }),
   watch: {
     bAllChecks () {
-        console.log('changed')
         this.checkAll()
     },
     tempo(_new) {
@@ -272,7 +289,7 @@ export default {
     this.reset();
   },
   methods: {
-    // Utility    
+    // Utility
     getComboIdxFromName(name) {
       return name.split("-")[1];
     },
