@@ -601,6 +601,11 @@ at-least-node@^1.0.0:
   resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
+aubiojs@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/aubiojs/-/aubiojs-0.1.1.tgz#c88b0558e11f30d592e923011d74b4141d871c99"
+  integrity sha512-P/NJ+OGqPzx7Wfw9f2Dnbla8EJ98k9p2yp8EOf/QBDy+flxCFeP/i6Zdl+3+9CkKvLX2kpa8REdlK0RRVdaSXw==
+
 author-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/author-regex/-/author-regex-1.0.0.tgz#d08885be6b9bbf9439fe087c76287245f0a81450"
