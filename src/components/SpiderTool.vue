@@ -146,7 +146,7 @@
               glossy
               v-ripple
               id="stop"
-              @click="store.stop"
+              @click="stop"
               :disabled="!store.bIsRunning"
             >
               <i class="fa fa-stop"></i>
@@ -201,14 +201,13 @@ import { onMounted } from "vue";
 const showCombos = ref( false );
 const store = useSpiderStore();
 
-const generatedCheckOpts = [];
-  store.allCombinations.forEach( ( el, idx ) => {
-    let objOption = {
+const generatedCheckOpts = store.allCombinations.map( ( el, idx ) => {
+    return {
       label: el.join( " " ),
       value: `combo-${idx}`,
       id: `combo-${idx}`,
     };
-    generatedCheckOpts.push( objOption );
+    // generatedCheckOpts.push( objOption );
   } );
 
 const checkAll = () => {
@@ -332,6 +331,11 @@ const calculateLeft = ( whichDot ) => {
   let offsetLeft = centerLine - dotWidth / 2.0;
   return offsetLeft;
 };
+const stop = () => {
+  resetUI()
+  store.stop()
+  store.$reset()
+}
 onMounted( () => {
   resetUI()
 } );
