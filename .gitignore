@@ -1,2 +1,8 @@
 node_modules
-dist/
+dist/.g
+.DS_Store
+
+dist/electron/UnPackaged/yarn.lock
+dist/electron/UnPackaged/package.json
+dist/electron/UnPackaged/index.html
+

@@ -1,40 +1,51 @@
 <template>
   <q-page>
     <q-toolbar inset class="q-electron-drag">
-      <div >
+<q-space />
+<div class=""> <sup class='text-caption'>Current Key: {{ key }}</sup>
+</div>
+<q-space />
+<div>
 
-        <q-item
-          clickable
-            v-ripple
-dense
-        >
+  <q-item
+    clickable
+    v-ripple
+    dense
+  >
+    <q-item-section class="rounded">
+      <q-icon size="lg" name="mdi-cogs" />
+    </q-item-section>
+  </q-item>
+  <q-menu>
+
+
+    <q-list
+      separator
+      bordered
+      dense
+    >
+      <q-item
+        clickable
+        v-ripple
+      >
         <q-item-section avatar>
-<q-icon name="mdi-cogs" />
+          <q-icon name="key" />
         </q-item-section>
-        </q-item>
-        <q-menu>
-
-
-        <q-list bordered>
-          <q-item
-            clickable
-            v-ripple
+        <q-item-section>Set Key</q-item-section>
+        <q-menu
+          transition-duration='650'
+          transition-show="flip-down"
+          transition-hide="fade"
+          fit
+          anchor="top right"
+          self="top left"
+          auto-close
+          separator
+        >
+          <q-list
+            dense
+            separator
           >
-            <q-item-section avatar>
-              <q-icon name="key" />
-            </q-item-section>
-            <q-item-section>Set Key</q-item-section>
-            <q-menu
-              transition-duration='650'
-              transition-show="flip-down"
-              transition-hide="fade"
-              fit
-              anchor="top right"
-              self="top left"
-              auto-close
-              separator
-            >
-              <q-list dense>
                 <q-item
                   v-for="key in keyOptions"
                   :key="key"
@@ -76,7 +87,7 @@ dense
                 <q-option-group
                   v-model="accBoxes"
                   :options="boxSelections"
-                  class="q-py-lg"
+                  class="q-mx-lg q-my-xs "
                   color="accent"
                   type="toggle"
                   @input="updateFretboard"
@@ -178,174 +189,6 @@ dense
             </q-list>
             </q-menu>
             </div>
-            <!-- <q-btn
-                                icon="mdi-cog"
-                                aria-label="Menu"
-                              >
-                                <q-menu
-                                  fit
-                                  anchor="top right"
-                                  self="top left"
-                                  transition-duration='650'
-                                  transition-show="flip-down"
-                                  transition-hide="flip-up"
-                                >
-                                  <q-list
-                                    padding
-                                    separator
-                                  >
-                                    <q-item
-                                      clickable
-                                      v-ripple
-                                    >
-                                      <q-item-section avatar>
-                                        <q-icon name="key" />
-
-
-                                      </q-item-section>
-                                      <q-item-section>Set Key</q-item-section>
-                                      <q-menu
-                                        transition-duration='500'
-                                        transition-show="fade"
-                                        transition-hide="flip-up"
-                                        auto-close
-                                        cover
-                                        separator
-                                      >
-                                        <q-list fit>
-                                          <q-item
-                                            v-for="key in keyOptions"
-                                            :key="key"
-                                            clickable
-                                            @click="setKey(key)"
-                                          >
-                                            <q-item-section avatar>
-                                              <q-icon name="music_clef_treble" />
-                                            </q-item-section>
-                                            <q-item-section>
-
-                                              <q-item-label>{{ key }}</q-item-label>
-                                            </q-item-section>
-
-                                          </q-item>
-                                        </q-list>
-                                      </q-menu>
-                                    </q-item>
-
-                                  </q-list>
-
-
-                                </q-menu>
-                                </q-btn>
-                                <q-expansion-item group="filters">
-                                  <template v-slot:header>
-                                    <q-item-section
-                                      avatar
-                                      class=""
-                                    >
-                                      <q-avatar
-                                        size="2.75em"
-                                        icon="widgets"
-                                        class="q-ml-none"
-                                      />
-                                    </q-item-section>
-                                    <q-item-section class="text-body1 text-weight-bold">
-                                      Boxes
-                                    </q-item-section>
-                                  </template>
-                                  <div class="bg-black">
-                                    <q-option-group
-                                      v-model="accBoxes"
-                                      :options="boxSelections"
-                                      class="q-py-lg"
-                                      color="accent"
-                                      type="toggle"
-                                      @input="updateFretboard"
-                                    />
-                                    <q-separator />
-                                  </div>
-                                </q-expansion-item>
-                                <q-expansion-item
-                                  group="filters"
-                                  icon="rounded_corner"
-                                >
-                                  <template v-slot:header>
-                                    <q-item-section avatar>
-                                      <q-avatar
-                                        size="2.75em"
-                                        icon="rounded_corner"
-                                      />
-                                    </q-item-section>
-                                    <q-item-section class="text-body1 text-weight-bold">
-                                      Patterns
-                                    </q-item-section>
-                                  </template>
-                                  <div class="bg-black">
-                                    <q-option-group
-                                      v-model="accPatterns"
-                                      :options="patternSelections"
-                                      color="accent"
-                                      type="toggle"
-                                      @input="updateFretboard"
-                                    />
-                                    <q-separator />
-                                  </div>
-                                </q-expansion-item>
-                                <q-expansion-item group="filters">
-                                  <template v-slot:header>
-                                    <q-item-section avatar>
-                                      <q-avatar
-                                        size="2.75em"
-                                        icon="queue_music"
-                                      />
-                                    </q-item-section>
-                                    <q-item-section class="text-body1 text-weight-bold">
-                                      Scales
-                                    </q-item-section>
-                                  </template>
-                                  <div class="bg-black">
-                                    <q-option-group
-                                      v-model="accScales"
-                                      :options="scaleFilters"
-                                      color="accent"
-                                      type="toggle"
-                                      @input="updateFretboard"
-                                    />
-                                    <q-separator />
-                                  </div>
-                                </q-expansion-item>
-                                <q-expansion-item
-                                  group="filters"
-                                  icon="music_note"
-                                  label="Root Notes"
-                                >
-                                  <template v-slot:header>
-                                    <q-item-section avatar>
-                                      <q-avatar
-                                        size="2.75em"
-                                        icon="music_note"
-                                      />
-                                    </q-item-section>
-                                    <q-item-section class="text-body1 text-weight-bold">
-                                      Root Notes
-                                    </q-item-section>
-                                  </template>
-                                  <div class="bg-black">
-                                    <q-option-group
-                                      v-model="accRootNotes"
-                                      :options="rootNoteFilters"
-                                      color="accent"
-                                      type="toggle"
-                                      @input="updateFretboard"
-                                    />
-                                    <q-separator />
-                                  </div>
-                                </q-expansion-item>
-                        -->
-            <q-space />
-            <div class=""> <sup class='text-caption'>Current Key: {{ key }}</sup>
-            </div>
-            <q-space />
             </q-toolbar>
 
       <div

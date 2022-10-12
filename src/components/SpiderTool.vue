@@ -1,13 +1,13 @@
 <template>
-  <q-page class="resting">
+  <q-page :class="store.resting">
     <q-toolbar inset>
       <q-space />
       <q-btn
         icon="fa fa-check-square"
         glossy
         v-ripple
-        :label="comboCount > 0 ? `(${comboCount})`:''"
-        :disabled="bIsRunning"
+        :label="store.comboCount > 0 ? `(${store.comboCount})`:''"
+        :disabled="store.bIsRunning"
       >
         <q-menu
           class="dropdown-pane dark large"
@@ -26,7 +26,7 @@
                   checked-icon="check"
                   color="green"
                   unchecked-icon="clear"
-                  v-model="bAllChecks"
+                  v-model="store.bAllChecks"
                 />
               </q-item-section>
             </q-item>
@@ -44,13 +44,13 @@
                         class="checkbox comboCategoryCheckbox"
                         type="checkbox"
                         id="all-1"
-                        v-model="all_1"
+                        v-model="store.all_1"
                         @change="checkSet(1, this.checked, this)"
                       />&nbsp;<label for="all-1">All</label>
                     </div>
                     <q-option-group
-                      v-model="selectedCombinations"
-                      :options="chkOpts.slice(0, 6)"
+                      v-model="store.selectedCombinations"
+                      :options="generatedCheckOpts.slice(0, 6)"
                       :class="`checkbox comboCheckbox finger-1`"
                       type="checkbox"
                     />
@@ -62,13 +62,13 @@
                         class="checkbox comboCategoryCheckbox"
                         type="checkbox"
                         id="all-2"
-                        v-model="all_2"
+                        v-model="store.all_2"
                         @change="checkSet(2, this.checked)"
                       />&nbsp;<label for="all-2">All</label>
                     </div>
                     <q-option-group
-                      v-model="selectedCombinations"
-                      :options="chkOpts.slice(6, 12)"
+                      v-model="store.selectedCombinations"
+                      :options="generatedCheckOpts.slice(6, 12)"
                       :class="`checkbox comboCheckbox finger-2`"
                       type="checkbox"
                     />
@@ -80,13 +80,13 @@
                         class="checkbox comboCategoryCheckbox"
                         type="checkbox"
                         id="all-3"
-                        v-model="all_3"
+                        v-model="store.all_3"
                         @change="checkSet(3, this.checked)"
                       />&nbsp;<label for="all-3">All</label>
                     </div>
                     <q-option-group
-                      v-model="selectedCombinations"
-                      :options="chkOpts.slice(12, 18)"
+                      v-model="store.selectedCombinations"
+                      :options="generatedCheckOpts.slice(12, 18)"
                       :class="`checkbox comboCheckbox finger-3`"
                       type="checkbox"
                     />
@@ -98,13 +98,13 @@
                         class="checkbox comboCategoryCheckbox"
                         type="checkbox"
                         id="all-4"
-                        v-model="all_4"
+                        v-model="store.all_4"
                         @change="checkSet(4, this.checked)"
                       />&nbsp;<label for="all-4">All</label>
                     </div>
                     <q-option-group
-                      v-model="selectedCombinations"
-                      :options="chkOpts.slice(18)"
+                      v-model="store.selectedCombinations"
+                      :options="generatedCheckOpts.slice(18)"
                       :class="`checkbox comboCheckbox finger-4`"
                       type="checkbox"
                     />
@@ -119,26 +119,26 @@
               id="tempo"
               type="number"
               label="BPM"
-              v-model="tempo"
+              v-model="store.tempo"
               size="4"
-              :disable="bIsRunning"
+              :disable="store.bIsRunning"
               standout
               dense
             />
             <q-btn
               id="play"
-              @click="toggleRun()"
-              :disabled="comboCount === 0 && !bIsRunning"
-              :active="bIsRunning"
+              @click="start"
+              :disabled="store.comboCount === 0 && !store.bIsRunning"
+              :active="store.bIsRunning"
               glossy
               v-ripple
             >
               <i
-                v-show="bIsRunning"
+                v-show="store.bIsRunning"
                 class="fa fa-pause"
               ></i>
               <i
-                v-show="!bIsRunning"
+                v-show="!store.bIsRunning"
                 class="fa fa-play"
               ></i>
             </q-btn>
@@ -146,8 +146,8 @@
               glossy
               v-ripple
               id="stop"
-              @click="stop"
-              :disabled="!bIsRunning"
+              @click="store.stop"
+              :disabled="!store.bIsRunning"
             >
               <i class="fa fa-stop"></i>
             </q-btn>
@@ -157,7 +157,7 @@
 
     <div id="main">
       <div id="headerWrapper">
-        <div id="message"></div>
+        <div id="message" v-html="store.messageString"></div>
       </div>
       <div class="fretboard">
         <div class="fretboard-mask">
@@ -182,485 +182,187 @@
       </div>
       <div id="progressBarWrapper">
         <div id="progressBar" class="progress-wrapper">
-          <div class="progress-indicator" id="progressIndicator"></div>
+          <div class="progress-indicator" id="progressIndicator" ></div>
         </div>
       </div>
     </div>
   </q-page>
 </template>
 <script>
-import { ref } from "vue";
-import { Howl, Howler } from "howler";
-
-const opts = [
-  [1, 2, 3, 4],
-  [1, 2, 4, 3],
-  [1, 3, 2, 4],
-  [1, 3, 4, 2],
-  [1, 4, 2, 3],
-  [1, 4, 3, 2],
-  [2, 1, 3, 4],
-  [2, 1, 4, 3],
-  [2, 3, 1, 4],
-  [2, 3, 4, 1],
-  [2, 4, 1, 3],
-  [2, 4, 3, 1],
-  [3, 1, 2, 4],
-  [3, 1, 4, 2],
-  [3, 2, 1, 4],
-  [3, 2, 4, 1],
-  [3, 4, 1, 2],
-  [3, 4, 2, 1],
-  [4, 1, 2, 3],
-  [4, 1, 3, 2],
-  [4, 2, 1, 3],
-  [4, 2, 3, 1],
-  [4, 3, 1, 2],
-  [4, 3, 2, 1],
-];
 export default {
   name: "SpiderTool",
-  data: () => ({
-    tempo: 150,
-    stringSpacing: 18.8,
-    stringOffset: -3.5,
-    dotStrings: null,
-    dotDirections: null,
-    allCombinations: opts,
-    selectedCombinations: ref([]),
-    nRestCycle: null,
-    bRestFinished: ref(false),
-    bIsRunning: ref(false),
-    bIsPaused: ref(false),
-    bCountdownFinished: ref(false),
-    nCountdownCycle: null,
-    nCombinationIndex: null,
-    nCombinationDotIndex: null,
-    nStringIndex: null,
-    nTimerID: null,
-    tockSound: new Howl( {
-      src: ["/tock-sound.mp3"],
-    } ),
-    tickSound: new Howl( {
-      src: ["/tick-sound.mp3"],
-    } ),
-    showCombos: ref(false),
-    bAllChecks: ref(false),
-    all_1: ref(false),
-    all_2: ref(false),
-    all_3: ref(false),
-    all_4: ref(false),
-  }),
-  watch: {
-    bAllChecks () {
-        this.checkAll()
-    },
-    tempo(_new) {
-      let val = Math.max(10, _new);
-      val = Math.min(400, val);
-      return val;
-    },
-  },
-  computed: {
-    timerDelay() {
-      return (60 / this.tempo) * 1000;
-    },
-    comboCount() {
-      return this.selectedCombinations.length;
-    },
-    chkOpts() {
-      const options = [];
-      opts.forEach((el, idx) => {
-        let objOption = {
-          label: el.join(" "),
-          value: `combo-${idx}`,
-          id: `combo-${idx}`,
-        };
-        options.push(objOption);
-      });
-      return options;
-    },
-    currentCombo() {
-      let comboName = this.selectedCombinations[this.nCombinationIndex];
-      return this.allCombinations[this.getComboIdxFromName(comboName)];
-    },
-  },
-  mounted() {
-    this.reset();
-  },
-  methods: {
-    // Utility
-    getComboIdxFromName(name) {
-      return name.split("-")[1];
-    },
-    // UI
-    checkAll() {
-      // load selectedCombinations
-      if (this.bAllChecks) {
-        for (let i = 0; i < this.allCombinations.length; i++) {
-          this.selectedCombinations.push(`combo-${i}`);
-        }
-      } else {
-        this.selectedCombinations = [];
-      }
-      //
-      for (let i = 1; i <= 4; i++) {
-        this[`all_${i}`] = this.bAllChecks;
-      }
-    },
-    checkSet(nIndex = 1, bChecked = true, obj = null) {
-      // get value for set "all"
-      bChecked = this["all_" + nIndex];
+}
+</script>
+<script setup>
+import { ref, watch } from "vue";
+import { useSpiderStore } from "/src/stores/spider";
+import { onMounted } from "vue";
 
-      // determine combo group
-      let end = 6 * nIndex;
-      let start = end - 6;
+const showCombos = ref( false );
+const store = useSpiderStore();
 
-      for (let i = start; i < end; i++) {
-        // get id for checkboxes
-        let combo = `combo-${i}`;
-        // toggle selection
-        if (bChecked) {
-          this.selectedCombinations.push(combo);
-        } else {
-          this.selectedCombinations = this.selectedCombinations.filter(
-            (el) => el === combo
-          );
-        }
-      }
-    },
-    updateProgress() {
-      let nCurrentIndex = this.nCombinationIndex;
-      let nTotalCount = this.selectedCombinations.length;
-      if (nTotalCount > 0) {
-        let comboPercentage = parseFloat((nCurrentIndex / nTotalCount) * 100);
-        let stringPercentage =
-          (this.nStringIndex - 1) * ((100 / nTotalCount) * 0.1);
+const generatedCheckOpts = [];
+  store.allCombinations.forEach( ( el, idx ) => {
+    let objOption = {
+      label: el.join( " " ),
+      value: `combo-${idx}`,
+      id: `combo-${idx}`,
+    };
+    generatedCheckOpts.push( objOption );
+  } );
 
-        let nPercent = comboPercentage + stringPercentage;
-        document.querySelector(
-          "#progressIndicator"
-        ).style.width = `${nPercent}%`;
-      }
-    },
-    getFormattedCombination(nIndex = 0) {
-      if (nIndex > this.selectedCombinations.length - 1) return "";
-      let nComboIndex = this.selectedCombinations[nIndex].split("-")[1];
-      return opts[nComboIndex].join("-");
-    },
-    setMessage(strMessage) {
-      document.querySelector("#message").innerHTML = strMessage;
-    },
-    // Functional
-    playClick(tickOrTock) {
-      if (tickOrTock == 0) {
-        this.tickSound.play();
-      } else {
-        this.tockSound.play();
-      }
-    },
-    toggleRun() {
-      if (!this.bIsRunning) {
-        this.run();
-      } else {
-        this.pause();
-      }
-    },
-    run() {
-      //retrieve the list of combinations
-      if (this.comboCount == 0) {
-        return;
-      }
-      if (this.initialize()) {
-        this.bIsRunning = true;
-        this.bCountingDown = true;
-        this.nCountdownCycle = 7;
-        this.isCountingDown = true;
-        this.updateProgress();
-        this.nTimerID = setInterval(this.updateCallback, this.timerDelay);
-      }
-    },
-    initialize() {
-      //update the dots to match the first combination.
-      this.setDotStates().setDotsFirstPosition();
-      return true;
-    },
-    pause() {
-      this.bIsPaused = true;
-      this.bIsRunning = false;
-      clearInterval(this.nTimerID);
-    },
-    stop() {
-      clearInterval(this.nTimerID);
-      this.nTimerID = null;
-      this.bIsPaused = false;
-      this.bIsRunning = false;
-      this.setMessage("");
-      // this.reset();
-    },
-    updateCombinationMessage() {
-      this.setMessage(this.getFormattedCombination(this.nCombinationIndex));
-    },
-    updateCallback() {
-      //Determine if we are counting down
-      if (!this.bCountdownFinished) {
-        // The countdown has not been finished,
-
-        if (this.nCountdownCycle == 0) {
-          let messageString = `
-            Get Ready... ${this.nCountdownCycle + 1} <br/>
-            <small>Next: ${this.getFormattedCombination(
-              this.nCombinationIndex + 1
-            )}</small>`;
-          this.setMessage(messageString);
-          this.playClick(
-            this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1
-          );
-          // We've reached the end of the countdown.
-          this.bCountdownFinished = true;
-          this.nCountdownCycle = 7;
-          if (this.nCombinationIndex == -1) {
-            this.nCombinationIndex == 0;
-          }
-          return;
-        } else {
-          // We're still counting down, update the status
-          let messageString = `Get Ready... ${this.nCountdownCycle + 1}`;
-          if (this.nCombinationIndex == 0) {
-            messageString += `<br/><small>Start With: ${this.getFormattedCombination(
-              this.nCombinationIndex
-            )}</small>`;
-          } else {
-            messageString += `<br/><small>Next: ${this.getFormattedCombination(
-              this.nCombinationIndex + 1
-            )}</small>`;
-          }
-          this.setMessage(messageString);
-          this.playClick(
-            this.nCountdownCycle == 7 || this.nCountdownCycle == 3 ? 0 : 1
-          );
-          this.nCountdownCycle--;
-          return;
-        }
-      } else {
-        // Countdown is over, now we're moving dots
-
-        // Have we moved all the dots onto the current string?
-        // (This matters because we don't really have to do much if we haven't)
-        if (this.nCombinationDotIndex < 3) {
-          this.nCombinationDotIndex++;
-
-          // No, all the dots are not yet onto this string.
-          if (this.nStringIndex == 1 && this.nCombinationDotIndex == 0) {
-            document.querySelector("body").classList.toggle("resting", false);
-            this.updateCombinationMessage();
-          }
-        } else {
-          // Yes, all the dots are on this string.
-
-          // Are we on the last string?
-          if (this.nStringIndex == 10) {
-            // Yes, we are on the last string
-
-            // Is this the last combination in the list?
-            if (
-              this.nCombinationIndex ==
-              this.selectedCombinations.length - 1
-            ) {
-              // Yes, this is the final combination, and we have finished the final string . We are done.
-
-              this.updateProgress();
-              document.querySelector("#progressIndicator").style.width = "100%";
-              this.nStringIndex = 0;
-              this.nCombinationIndex = 0;
-              this.nCombinationDotIndex = 0;
-              clearInterval(this.nTimerID);
-              this.stop();
-              this.setMessage("Done");
-              return;
-            } else if (
-              this.nCombinationIndex <
-              this.selectedCombinations.length - 1
-            ) {
-              // No, this is not the last combination, but we have reached the last string.
-              // At this point we need to initiate a rest, and when that rest is over, advance to
-              // the next combination.
-
-              // Determine if we should be resting
-              if (!this.bRestFinished) {
-                // Our rest is not finished.
-
-                if (this.nRestCycle == 0) {
-                  // Our rest is finished.
-                  var restString = `Rest... ${this.nRestCycle + 1}<br/>
-                  <small>Next: ${this.getFormattedCombination(
-                    this.nCombinationIndex + 1
-                  )}</small>`;
-                  this.setMessage(restString);
-                  this.playClick(1);
-                  this.bRestFinished = true;
-                  this.nRestCycle = 7;
-                  return;
-                } else {
-                  if (this.nRestCycle == 7) {
-                    this.setDotStates(1);
-                    document
-                      .querySelector("body")
-                      .classList.toggle("resting", true);
-                  }
-                  this.playClick(
-                    this.nRestCycle == 7 || this.nRestCycle == 3 ? 0 : 1
-                  );
-                  var restString = `Rest... ${this.nRestCycle + 1}<br/>
-                  <small>Next: ${this.getFormattedCombination(
-                    this.nCombinationIndex + 1
-                  )}</small>`;
-                  this.setMessage(restString);
-
-                  this.nRestCycle--;
-                  return;
-                }
-              } else {
-                // The rest has finished, let's reset it. We won't hit this again until it's time to rest again.
-                this.bRestFinished = false;
-                this.nRestCycle = 7;
-                document
-                  .querySelector("body")
-                  .classList.toggle("resting", false);
-
-                // Now we advance the combination index.
-                this.nCombinationIndex++;
-
-                // Display information about the new combination.
-                this.updateCombinationMessage();
-
-                // Advance us to the next string
-                this.nStringIndex = 1;
-
-                // Start the dot count over
-                this.nCombinationDotIndex = 0;
-
-                this.updateCombinationMessage();
-              }
-            }
-          } else if (this.nStringIndex < 10) {
-            // We've hit the last dot, but we're not on the last string.
-            this.nStringIndex++;
-            this.updateProgress();
-            this.nCombinationDotIndex = 0;
-          }
-        }
-
-        let whichDot = this.currentCombo[this.nCombinationDotIndex] - 1;
-        this.playClick(this.nCombinationDotIndex);
-        this.moveDot(whichDot);
-      }
-    },
-    reset() {
-      this.dotStrings = [1, 1, 1, 1];
-      this.dotDirections = [1, 1, 1, 1];
-      this.nCombinationIndex = 0;
-      this.nCombinationDotIndex = -1;
-      this.nStringIndex = 1;
-      // this.selectedCombinations =[];
-
-      this.nRestCycle = 7;
-      this.bRestFinished = false;
-      this.nCountdownCycle = 7;
-      this.bCountdownFinished = false;
-
-      document.querySelector(".first")?.classList.toggle("first", false);
-      document.querySelector(".second")?.classList.toggle("second", false);
-      document.querySelector(".third")?.classList.toggle("third", false);
-      document.querySelector(".fourth")?.classList.toggle("fourth", false);
-      // document.querySelectorAll( '.dot' ).forEach( el => {
-      //   el.style.display = 'none';
-      // })
-      this.setDotsFirstPosition();
-
-      this.setMessage("");
-      this.updateCombinationMessage();
-    },
-    setDotStates(nOffset = 0) {
-      let selected =
-        this.selectedCombinations[this.nCombinationIndex + nOffset];
-      let activeCombination = opts[selected.split("-")[1]];
-      //$('.dot').fadeTo( 200, .5, function(){
-      document.querySelectorAll(".dot").forEach((el) => {
-        el.style.display = "block";
-      });
-      document.querySelector(".first")?.classList.toggle("first", false);
-      document.querySelector(".second")?.classList.toggle("second", false);
-      document.querySelector(".third")?.classList.toggle("third", false);
-      document.querySelector(".fourth")?.classList.toggle("fourth", false);
-      document
-        .querySelector("#dot" + activeCombination[0])
-        ?.classList.toggle("first");
-      document
-        .querySelector("#dot" + activeCombination[1])
-        ?.classList.toggle("second");
-      document
-        .querySelector("#dot" + activeCombination[2])
-        ?.classList.toggle("third");
-      document
-        .querySelector("#dot" + activeCombination[3])
-        ?.classList.toggle("fourth");
-      //	$('.dot').fadeTo( 800, 1.0 );
-      //});
-      return this;
-    },
-    setDotsFirstPosition() {
-      this.moveDotToString(0, 1);
-      this.moveDotToString(1, 1);
-      this.moveDotToString(2, 1);
-      this.moveDotToString(3, 1);
-    },
-    moveDot(whichDot) {
-      // determine string/direction
-      this.dotStrings[whichDot] += this.dotDirections[whichDot];
-      if (this.dotStrings[whichDot] == 6 || this.dotStrings[whichDot] == 1) {
-        this.dotDirections[whichDot] *= -1;
-      }
-
-      let theDot = document.querySelector(`#dot${whichDot + 1}`);
-      let newTop = this.calculateTop(this.dotStrings[whichDot], whichDot);
-      let newLeft = this.calculateLeft(whichDot);
-
-      theDot.style.top = `${newTop}px`;
-      theDot.style.left = `${newLeft}px`;
-    },
-    moveDotToString(whichDot, whichString) {
-      let theDot = document.querySelector(`#dot${whichDot + 1}`);
-      let newTop = this.calculateTop(whichString, whichDot);
-      let newLeft = this.calculateLeft(whichDot);
-      theDot.style.top = `${newTop}px`;
-      theDot.style.left = `${newLeft}px`;
-    },
-    calculateTop(string, whichDot) {
-      var dotIndex = whichDot + 1;
-      var dotHeight = document.querySelector(`#dot${dotIndex}`).offsetHeight;
-      var stringTop = document.querySelector(`#string${string}`).offsetTop;
-      var offsetTop = stringTop - dotHeight / 2.0;
-      return offsetTop;
-    },
-    calculateLeft(whichDot) {
-      let dotIndex = whichDot + 1;
-      let rightFret = dotIndex + 2;
-      let leftFret = dotIndex + 1;
-      let leftSide = document
-        .querySelector(`#fret${leftFret}`)
-        .getBoundingClientRect().left;
-      let rightSide = document
-        .querySelector(`#fret${rightFret}`)
-        .getBoundingClientRect().left;
-      let gapWidth = rightSide - leftSide;
-      let centerLine = leftSide + gapWidth / 2.0;
-      let dotWidth = document.querySelector(`#dot${dotIndex}`).offsetWidth;
-      let offsetLeft = centerLine - dotWidth / 2.0;
-      return offsetLeft;
-    },
-  },
+const checkAll = () => {
+  // load selectedCombinations
+  if ( store.bAllChecks ) {
+    for ( let i = 0; i < store.allCombinations.length; i++ ) {
+      store.selectedCombinations.push( `combo-${i}` );
+    }
+  } else {
+    store.selectedCombinations = [];
+  }
+  //
+  for ( let i = 1; i <= 4; i++ ) {
+    store[`all_${i}`] = store.bAllChecks;
+  }
 };
+const checkSet = ( nIndex = 1, bChecked = true, obj = null ) => {
+  // get value for set "all"
+  bChecked = store["all_" + nIndex];
+
+  // determine combo group
+  let end = 6 * nIndex;
+  let start = end - 6;
+
+  for (let i = start; i < end; i++) {
+    // get id for checkboxes
+    let combo = `combo-${i}`;
+    // toggle selection
+    if (bChecked) {
+      store.selectedCombinations.push(combo);
+    } else {
+      store.selectedCombinations = store.selectedCombinations.filter(
+        (el) => el === combo
+      );
+    }
+  }
+};
+const resetUI = () => {
+  document.querySelector( ".first" )?.classList.toggle( "first", false );
+  document.querySelector( ".second" )?.classList.toggle( "second", false );
+  document.querySelector( ".third" )?.classList.toggle( "third", false );
+  document.querySelector( ".fourth" )?.classList.toggle( "fourth", false );
+  setDotsFirstPosition();
+  store.updateCombinationMessage();
+};
+const setDotStates = ( nOffset = 0 ) => {
+  let selected =
+    store.selectedCombinations[store.nCombinationIndex + nOffset];
+  let activeCombination = store.allCombinations[selected.split( "-" )[1]];
+  //$('.dot').fadeTo( 200, .5, function(){
+  document.querySelectorAll( ".dot" ).forEach( ( el ) => {
+    el.style.display = "block";
+  } );
+  document.querySelector( ".first" )?.classList.toggle( "first", false );
+  document.querySelector( ".second" )?.classList.toggle( "second", false );
+  document.querySelector( ".third" )?.classList.toggle( "third", false );
+  document.querySelector( ".fourth" )?.classList.toggle( "fourth", false );
+  document
+    .querySelector( "#dot" + activeCombination[0] )
+    ?.classList.toggle( "first" );
+  document
+    .querySelector( "#dot" + activeCombination[1] )
+    ?.classList.toggle( "second" );
+  document
+    .querySelector( "#dot" + activeCombination[2] )
+    ?.classList.toggle( "third" );
+  document
+    .querySelector( "#dot" + activeCombination[3] )
+    ?.classList.toggle( "fourth" );
+  //	$('.dot').fadeTo( 800, 1.0 );
+  //});
+  // return this;
+};
+const setDotsFirstPosition = () => {
+  moveDotToString( 0, 1 );
+  moveDotToString( 1, 1 );
+  moveDotToString( 2, 1 );
+  moveDotToString( 3, 1 );
+};
+const moveDot = ( whichDot ) => {
+  // determine string/direction
+  store.dotStrings[whichDot] += store.dotDirections[whichDot];
+  if ( store.dotStrings[whichDot] == 6 || store.dotStrings[whichDot] == 1 ) {
+    store.dotDirections[whichDot] *= -1;
+  };
+
+  let theDot = document.querySelector( `#dot${whichDot + 1}` );
+  let newTop = calculateTop( store.dotStrings[whichDot], whichDot );
+  let newLeft = calculateLeft( whichDot );
+
+  theDot.style.top = `${newTop}px`;
+  theDot.style.left = `${newLeft}px`;
+};
+const moveDotToString = ( whichDot, whichString ) => {
+  let theDot = document.querySelector( `#dot${whichDot + 1}` );
+  let newTop = calculateTop( whichString, whichDot );
+  let newLeft = calculateLeft( whichDot );
+  theDot.style.top = `${newTop}px`;
+  theDot.style.left = `${newLeft}px`;
+};
+const calculateTop = ( string, whichDot ) => {
+  var dotIndex = whichDot + 1;
+  var dotHeight = document.querySelector( `#dot${dotIndex}` ).offsetHeight;
+  var stringTop = document.querySelector( `#string${string}` ).offsetTop;
+  var offsetTop = stringTop - dotHeight / 2.0;
+  return offsetTop;
+};
+const calculateLeft = ( whichDot ) => {
+  let dotIndex = whichDot + 1;
+  let rightFret = dotIndex + 2;
+  let leftFret = dotIndex + 1;
+  let leftSide = document
+    .querySelector( `#fret${leftFret}` )
+    .getBoundingClientRect().left;
+  let rightSide = document
+    .querySelector( `#fret${rightFret}` )
+    .getBoundingClientRect().left;
+  let gapWidth = rightSide - leftSide;
+  let centerLine = leftSide + gapWidth / 2.0;
+  let dotWidth = document.querySelector( `#dot${dotIndex}` ).offsetWidth;
+  let offsetLeft = centerLine - dotWidth / 2.0;
+  return offsetLeft;
+};
+onMounted( () => {
+  resetUI()
+} );
+
+watch(
+  () => store.bAllChecks,
+  checkAll
+)
+
+watch(
+  () => store.whichDot,
+  () => moveDot(store.whichDot)
+)
+watch(
+  () => store.dotState,
+  () => {
+    setDotStates(store.dotState)
+  }
+)
+watch(
+  () => store.progress,
+  () => {
+    document.querySelector('#progressIndicator').style.width = store.progress
+  }
+)
+
+const start = () => {
+  store.toggleRun();
+  setDotStates();
+  setDotsFirstPosition();
+}
 </script>
 
 <style>

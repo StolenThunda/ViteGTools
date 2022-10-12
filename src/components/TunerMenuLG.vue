@@ -84,14 +84,13 @@
   </div>
 </template>
 <script>
+  import { Application, DEBUG_INFO } from "../middleware/tools/tuner.js"
 export default {
   name: "TunerMenuLG",
-  props: {
-    app: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
+  data: () => ( {
+    info: DEBUG_INFO,
+    app: null
+  }),
   computed: {
     toggleTones: {
       get() {
@@ -112,7 +111,13 @@ export default {
       return this.app?.notes.a4 === 432;
     },
   },
-  methods: { 
+  mounted () {
+    // console.log("mounted");
+    this.app = new Application( this.$q.platform.is.ios );
+    this.app.start();
+    this.$emit( 'app-loaded', this.app ); // emit event to parent
+  },
+  methods: {
     getQ(obj) {
       return DEBUG_INFO;
     },

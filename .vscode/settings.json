@@ -13,7 +13,8 @@
     "vue"
   ],
   "cSpell.words": [
-    "Fretboard"
+    "Fretboard",
+    "pinia"
   ],
   "cSpell.language": "en,lorem,en-US,en-GB",
   "cSpell.enableFiletypes": [

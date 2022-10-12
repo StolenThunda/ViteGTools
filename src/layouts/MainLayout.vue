@@ -40,15 +40,18 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{Component}">
+
+        <transition name="moveUp">
+          <component
+            :is="Component"
+            :key="$route.path"
+          ></component>
+        </transition>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
-
-
-
-
-
 <script>
 const linksList = [
   {
@@ -63,12 +66,12 @@ const linksList = [
     icon: 'mdi-spider',
     link: '/spider'
   },
-  {
-    title: 'Tuner',
-    caption: 'Tuner',
-    icon: 'mdi-tune',
-    link: '/tuner'
-  }
+  // {
+  //   title: 'Tuner',
+  //   caption: 'Tuner',
+  //   icon: 'mdi-tune',
+  //   link: '/tuner'
+  // }
 ]
 
 export default {
@@ -77,10 +80,27 @@ name: 'MainLayout',
 </script>
 
 <script setup>
-import { defineComponent, ref } from 'vue'
+import { ref } from 'vue'
 import ToolLink from "components/ToolLink.vue";
 
 const leftDrawerOpen = ref( false )
 
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 </script>
+<style>
+.moveUp-enter-active {
+  animation: fadeIn 1s ease-in-out;
+}
+@keyframes fadeIn {
+  0% { opacity: 0;}
+  50% {opacity: 0.5;}
+  100% {opacity: 1;}
+}
+.moveUp-leave-active {
+  animation: moveUp .4s ease-in;
+}
+@keyframes moveUp {
+  0% {transform: translateY(0);}
+  100% {transform: translateY(-400px);}
+}
+</style>
