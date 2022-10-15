@@ -12,8 +12,11 @@
     v-ripple
     dense
   >
-    <q-item-section class="rounded">
+    <q-item-section class="rounded" avatar>
       <q-icon size="lg" name="mdi-cogs" />
+    </q-item-section>
+    <q-item-section>
+      <q-item-label overline>Start Here</q-item-label>
     </q-item-section>
   </q-item>
   <q-menu>

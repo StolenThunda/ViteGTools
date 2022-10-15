@@ -84,50 +84,51 @@
   </div>
 </template>
 <script>
-  import { Application, DEBUG_INFO } from "../middleware/tools/tuner.js"
+
 export default {
   name: "TunerMenuLG",
-  data: () => ( {
-    info: DEBUG_INFO,
-    app: null
-  }),
-  computed: {
-    toggleTones: {
-      get() {
-        return !this.app?.notes.isAutoMode;
-      },
-      set(value) {
-        this.app?.notes.toggleAutoMode();
-        this.enableTones = !this.app.notes.isAutoMode || false;
-      },
-    },
-    getA4() {
-      return this.app?.a4;
-    },
-    is440() {
-      return this.app?.notes.a4 === 440;
-    },
-    is432() {
-      return this.app?.notes.a4 === 432;
+  props: {
+    app: {
+      type: Object,
+      default: () => ( {} ),
     },
   },
-  mounted () {
-    // console.log("mounted");
-    this.app = new Application( this.$q.platform.is.ios );
-    this.app.start();
-    this.$emit( 'app-loaded', this.app ); // emit event to parent
+  data: () => ( {
+    theApp: null,
+  } ),
+  mounted() {
+    theApp = app;
+  },
+  computed: {
+    // toggleTones: {
+    //   get() {
+    //   },
+    //   set(value) {
+    //     this.theApp?.notes.toggleAutoMode();
+    //     this.enableTones = !this.theApp.notes.isAutoMode || false;
+    //   },
+    // },
+    getA4() {
+      return this.theApp?.a4;
+    },
+    is440() {
+      return this.theApp?.notes.a4 === 440;
+    },
+    is432() {
+      return this.theApp?.notes.a4 === 432;
+    },
   },
   methods: {
     getQ(obj) {
       return DEBUG_INFO;
     },
     setFreq(freq) {
-      this.app.a4 = freq;
-      this.app.tuner.middleA = freq;
-      this.app.notes.createNotes();
-      this.app.update({
+      this.theApp.a4 = freq;
+      this.theApp.tuner.middleA = freq;
+      this.theApp.notes.createNotes();
+      this.theApp.update({
         name: "A",
-        frequency: this.app.a4,
+        frequency: this.theApp.a4,
         octave: 4,
         value: 69,
         cents: 0,
@@ -140,7 +141,7 @@ export default {
           title: "Frequency",
           message: "What frequency would you like to tune to?",
           prompt: {
-            model: this.app.a4 || 440,
+            model: this.theApp.a4 || 440,
             type: "number", // optional
           },
           cancel: true,
@@ -159,7 +160,7 @@ export default {
     },
   },
   destroyed() {
-    this.app?.stop();
+    this.theApp?.stop();
   },
 };
 </script>

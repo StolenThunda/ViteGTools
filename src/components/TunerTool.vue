@@ -55,7 +55,9 @@ document.addEventListener(
   },
   false
 );
-
+import { Application, DEBUG_INFO } from "../middleware/tools/tuner.js";
+// import TunerMenuLG from "./TunerMenuLG.vue";
+// import TunerMenuSm from "./TunerMenuSm.vue";
 
 export default {
   name: "TunerTool",
@@ -66,12 +68,20 @@ export default {
     }
   },
   data: () => ( {
-    q: false
+    app: null,
+    q: false,
+    info: DEBUG_INFO,
   } ),
   components: {
-    TunerMenuLG: () => import('./TunerMenuLG.vue'),
+    TunerMenuLG: () => import( './TunerMenuLG.vue' ),
     // TunerMenuSM: () => import('./TunerMenuSm.vue')
-    },
+  },
+  mounted () {
+    // console.log("mounted");
+    this.app = new Application( this.$q.platform.is.ios );
+    this.app.start();
+    this.$emit( 'app-loaded', this.app ); // emit event to parent
+  },
 
 };
 </script>
