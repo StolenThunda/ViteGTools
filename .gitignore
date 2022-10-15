@@ -1,5 +1,5 @@
 node_modules
-dist/.g
+dist/
 .DS_Store
 
 dist/electron/UnPackaged/yarn.lock

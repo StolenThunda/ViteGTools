@@ -61,6 +61,12 @@ const linksList = [
     link: '/fretboard'
   },
   {
+    title: 'Metronome',
+    caption: 'Working on timing',
+    icon: 'mdi-metronome',
+    link: '/metronome'
+  },
+  {
     title: 'Spider Tool',
     caption: 'Finger strengthening and dexterity',
     icon: 'mdi-spider',
@@ -80,6 +86,7 @@ name: 'MainLayout',
 </script>
 
 <script setup>
+import 'src/middleware/monkeypatch.js'
 import { ref } from 'vue'
 import ToolLink from "components/ToolLink.vue";
 

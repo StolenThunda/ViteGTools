@@ -11,7 +11,7 @@ const ConsoleMessage = (...message) => {
 
 const onAudioInput = (evt) => {
   // 'evt.data' is an integer array containing raw audio data
-  
+
   ConsoleMessage("Audio data received: " + evt.data.length + " samples");
   // ... do something with the evt.data array ...
   ConsoleMessage( typeof evt );
@@ -61,7 +61,7 @@ Tuner.prototype.initGetUserMedia = function () {
   this.audioContext = window.AudioContext || window.webkitAudioContext;
   if (!this.audioContext) {
     return alert("AudioContext not supported");
-  }  
+  }
 
   // Older browsers might not implement mediaDevices at all, so we set an empty object first
   if (navigator.mediaDevices === undefined) {
@@ -453,7 +453,6 @@ export const Application = function (isIOS) {
 
 Application.prototype.start = function () {
   const self = this;
-
   this.tuner.onNoteDetected = function (note) {
     if (self.notes.isAutoMode) {
       if (self.lastNote === note.name) {

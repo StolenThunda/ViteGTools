@@ -8,6 +8,7 @@ const routes = [
       { path: '/spider', component: () => import('components/SpiderTool.vue') },
       { path: '/tuner', component: () => import('components/TunerTool.vue') },
       { path: '/fretboard', component: () => import('components/FretboardNav.vue') },
+      { path: '/metronome', component: () => import('components/MetronomeTool.vue') },
     ]
   },
 
