@@ -84,30 +84,24 @@
   </div>
 </template>
 <script>
-
 export default {
-  name: "TunerMenuLG",
-  props: {
-    app: {
-      type: Object,
-      default: () => ( {} ),
-    },
-  },
-  data: () => ( {
+name: "TunerMenuLG",
+data: () => ( {
     theApp: null,
   } ),
-  mounted() {
+mounted() {
     theApp = app;
   },
-  computed: {
-    // toggleTones: {
-    //   get() {
-    //   },
-    //   set(value) {
-    //     this.theApp?.notes.toggleAutoMode();
-    //     this.enableTones = !this.theApp.notes.isAutoMode || false;
-    //   },
-    // },
+computed: {
+    toggleTones: {
+      get () {
+        return !this.app?.notes.isAutoMode;
+      },
+      set(value) {
+        this.theApp?.notes.toggleAutoMode();
+        this.enableTones = !this.theApp.notes.isAutoMode || false;
+      },
+    },
     getA4() {
       return this.theApp?.a4;
     },
@@ -118,7 +112,7 @@ export default {
       return this.theApp?.notes.a4 === 432;
     },
   },
-  methods: {
+methods: {
     getQ(obj) {
       return DEBUG_INFO;
     },
@@ -159,8 +153,17 @@ export default {
         });
     },
   },
-  destroyed() {
+destroyed() {
     this.theApp?.stop();
   },
 };
+</script>
+
+<script setup>
+defineProps({
+    app: {
+      type: Object,
+      default: () => ( {} ),
+    },
+  });
 </script>

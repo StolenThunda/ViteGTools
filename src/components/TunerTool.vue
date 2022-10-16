@@ -8,8 +8,8 @@
         Tones Enabled
       </q-item-section>
     </q-item> -->
-  <TunerMenuLG class="gt-xs" :app="app" />
-  <!-- <TunerMenuSM class="lt-sm" :app="app" /> -->
+  <!-- <TunerMenuLG class="gt-xs" :app="app" /> -->
+  <TunerMenuSM class="lt-sm" :app="app" />
     <canvas class="frequency-bars"></canvas>
     <div class="meter">
       <div class="meter-dot"></div>
@@ -55,9 +55,7 @@ document.addEventListener(
   },
   false
 );
-import { Application, DEBUG_INFO } from "../middleware/tools/tuner.js";
-// import TunerMenuLG from "./TunerMenuLG.vue";
-// import TunerMenuSm from "./TunerMenuSm.vue";
+import { Application, DEBUG_INFO } from "src/middleware/tools/tuner.js";
 
 export default {
   name: "TunerTool",
@@ -73,11 +71,11 @@ export default {
     info: DEBUG_INFO,
   } ),
   components: {
-    TunerMenuLG: () => import( './TunerMenuLG.vue' ),
-    // TunerMenuSM: () => import('./TunerMenuSm.vue')
+    // TunerMenuLG: () => import( './TunerMenuLG.vue' ),
+    TunerMenuSM: () => import('src/components/TunerMenuSM.vue')
   },
   mounted () {
-    // console.log("mounted");
+    console.log("mounted");
     this.app = new Application( this.$q.platform.is.ios );
     this.app.start();
     this.$emit( 'app-loaded', this.app ); // emit event to parent
