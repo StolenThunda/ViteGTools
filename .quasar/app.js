@@ -23,6 +23,11 @@ import AppComponent from 'app/src/App.vue'
 import createRouter from 'app/src/router/index'
 
 
+  
+  import { Plugins } from '@capacitor/core'
+  const { SplashScreen } = Plugins
+  
+
 
 
 import { defineComponent, h, onMounted } from 'vue'
@@ -31,9 +36,11 @@ const RootComponent = defineComponent({
   setup (props) {
     onMounted(() => {
       
+      SplashScreen.hide()
+      
 
       
-      vueDevtools.connect('localhost', 8098)
+      vueDevtools.connect('172.26.141.93', 8098)
       
 
       
@@ -57,6 +64,8 @@ export default async function (createAppFn, quasarUserOptions) {
 
   app.use(Quasar, quasarUserOptions)
 
+  
+  app.config.globalProperties.$q.capacitor = window.Capacitor
   
 
   

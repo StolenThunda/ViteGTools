@@ -1,0 +1,1 @@
+import{Q as e}from"./QPage.b719db79.js";import{_ as t,z as a,B as o,C as s,A as r,H as n}from"./index.d7c3f1b2.js";import"./render.cf6875de.js";const c=a({name:"IndexPage"}),_=n("div",{class:"text-h4"}," Some tools for the guitar. ",-1);function d(i,p,f,m,l,x){return r(),o(e,{class:"text-center q-ma-lg"},{default:s(()=>[_]),_:1})}var B=t(c,[["render",d]]);export{B as default};
