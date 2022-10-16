@@ -27,7 +27,8 @@ export const useMetronomeStore = defineStore('metronome', {
       'eighth',
       'sixteenth',
       'triplet'
-    ]
+    ],
+    indicatorIdx: 0,
   }),
 
   getters: {
@@ -77,6 +78,8 @@ export const useMetronomeStore = defineStore('metronome', {
       }
 
       osc.start( time );
+      // config indicator value
+      if ( gainNode.gain.value  > 0)  this.indicatorIdx = beatNumber / 12
       osc.stop( time + this.noteLength );
     },
     scheduler () {

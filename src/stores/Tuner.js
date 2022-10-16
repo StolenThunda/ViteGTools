@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore( 'counter', {
+export const useTunerStore = defineStore( 'tuner', {
   state: () => ( {
     info: null,
     middleA: 440,
@@ -31,7 +31,7 @@ export const useCounterStore = defineStore( 'counter', {
   } ),
 
   getters: {
-   
+
   },
 
   actions: {

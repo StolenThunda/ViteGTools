@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
-
+import { useTunerStore } from "stores/Tuner";
+const tuner = useTunerStore()
 export const useCounterStore = defineStore('counter', {
   state: () => ({
-    counter: 0
+    tuner: tuner,
+    isAutoMode: true,
+    
   }),
 
   getters: {
@@ -12,8 +15,6 @@ export const useCounterStore = defineStore('counter', {
   },
 
   actions: {
-    increment () {
-      this.counter++
-    }
+
   }
 })
