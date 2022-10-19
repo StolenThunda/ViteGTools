@@ -148,12 +148,10 @@ export const useTunerStore = defineStore( 'tuner', {
       ctx = new ( window.AudioContext || window.webkitAudioContext )();
       return ctx;
     },
-    init () {
+    async init () {
       this.audioContext = this.getAudioContext();
       this.analyser = this.audioContext.createAnalyser();
       this.workletNode = await this.getWorkletNode( this.audioContext );
-
-      const self = this; /
 
       aubio().then( function ( aubio ) {
         this.pitchDetector = new aubio.Pitch(
