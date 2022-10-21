@@ -74,9 +74,9 @@ const linksList = [
   },
   {
     title: 'Tuner',
-    caption: 'Tuner',
+    caption: '2ner',
     icon: 'mdi-tune',
-    link: '/tuner'
+    link: '/tuner2'
   }
 ]
 

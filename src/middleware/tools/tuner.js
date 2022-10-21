@@ -169,8 +169,6 @@ Tuner.prototype.getWorkletNode = async function ( ctx ) {
   }
 }
 
-
-
 Tuner.prototype.getAudioContext = function () {
   let ctx;
   if (this.audioContext) ctx = this.audioContext;

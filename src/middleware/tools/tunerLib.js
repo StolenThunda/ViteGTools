@@ -1,17 +1,16 @@
-import { on } from "@svgdotjs/svg.js";
 
-export const onAudioInput = (evt) => {
-  // 'evt.data' is an integer array containing raw audio data
-  //
-  consoleMessage("Audio data received: " + evt.data.length + " samples");
-  console.log("Audio data received: " + evt.data.length + " samples");
+// export const onAudioInput = (evt) => {
+//   // 'evt.data' is an integer array containing raw audio data
+//   //
+//   consoleMessage("Audio data received: " + evt.data.length + " samples");
+//   console.log("Audio data received: " + evt.data.length + " samples");
 
-  // ... do something with the evt.data array ...
-};
+//   // ... do something with the evt.data array ...
+// };
 
-export const onAudioInputError = (error) => {
-  alert("onAudioInputError event recieved: " + JSON.stringify(error));
-};
+// export const onAudioInputError = (error) => {
+//   alert("onAudioInputError event recieved: " + JSON.stringify(error));
+// };
 
 export function consoleMessage(msg, debugVar) {
     if ( debugVar ) {
