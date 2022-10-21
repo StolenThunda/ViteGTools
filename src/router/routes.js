@@ -9,6 +9,7 @@ const routes = [
       { path: '/tuner', component: () => import('components/TunerTool.vue') },
       { path: '/fretboard', component: () => import('components/FretboardNav.vue') },
       { path: '/metronome', component: () => import('components/MetronomeTool.vue') },
+      { path: '/tuner2', component: () => import('components/Tuner/TunerApp.vue') },
     ]
   },
 

@@ -77,6 +77,12 @@ const linksList = [
     caption: 'Tuner',
     icon: 'mdi-tune',
     link: '/tuner'
+  },
+  {
+    title: 'Tuner2',
+    caption: '2ner',
+    icon: 'mdi-tune',
+    link: '/tuner2'
   }
 ]
 
