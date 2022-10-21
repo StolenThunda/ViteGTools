@@ -18,32 +18,32 @@
     <div class="notes">
       <div class="notes-list"></div>
       <div class="frequency text-h5"><span></span>Hz</div>
-      <div>
-        <q-btn
-          class="q-ma-md"
-          color="accent"
-          @click="q = !q"
-          label="Errors"
-          icon="error"
-          v-if="info !== ''"
-          stacked
-          push
-          glossy
-          rounded
-        />
+    </div>
+    <div>
+      <q-btn
+        class="q-ma-md"
+        color="accent"
+        @click="q = !q"
+        label="Errors"
+        icon="error"
+        v-if="info !== ''"
+        stacked
+        push
+        glossy
+        rounded
+      />
 
-        <q-dialog v-model="q">
-          <q-card>
-            <q-card-section>
-              <div class="text-h5">Error:</div>
-            </q-card-section>
-            <q-card-section style="max-height: 60vh; max-width: 90vw">
-              <div v-html="info" />
-              <!-- <div v-id="infoMessage">{{ getQ($q) }}</div> -->
-            </q-card-section>
-          </q-card>
-        </q-dialog>
-      </div>
+      <q-dialog v-model="q">
+        <q-card>
+          <q-card-section>
+            <div class="text-h5">Error:</div>
+          </q-card-section>
+          <q-card-section style="max-height: 60vh; max-width: 90vw">
+            <div v-html="info" />
+            <!-- <div v-id="infoMessage">{{ getQ($q) }}</div> -->
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </div>
   </div>
 </template>

@@ -72,11 +72,17 @@ const linksList = [
     icon: 'mdi-spider',
     link: '/spider'
   },
+  // {
+  //   title: 'Tuner',
+  //   caption: 'Tuner',
+  //   icon: 'mdi-tune',
+  //   link: '/tuner'
+  // },
   {
     title: 'Tuner',
-    caption: 'Tuner',
+    caption: '2ner',
     icon: 'mdi-tune',
-    link: '/tuner'
+    link: '/tuner2'
   }
 ]
 

@@ -3092,6 +3092,11 @@ pinia@^2.0.23:
     "@vue/devtools-api" "^6.4.4"
     vue-demi "*"
 
+pitchfinder@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/pitchfinder/-/pitchfinder-2.3.2.tgz#80debb4e0328255e02ab33cee567fa21413879bc"
+  integrity sha512-Mn3jcp/y1xmAUKI1lMIU8bIqE9AcSuKMFuvJI9C/36oNwVklUF167o0TH/H5fwxuSIaz+XfBD6vd2G5lnddpzw==
+
 plist@^3.0.0, plist@^3.0.1, plist@^3.0.4:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.0.6.tgz#7cfb68a856a7834bca6dbfe3218eb9c7740145d3"
