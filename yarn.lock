@@ -213,6 +213,26 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@tonaljs/core@^4.6.5":
+  version "4.6.5"
+  resolved "https://registry.yarnpkg.com/@tonaljs/core/-/core-4.6.5.tgz#c00a301dfd939b3c75c71049c2091998d7e31aff"
+  integrity sha512-t7Vx0+L3j/ubQj2AhI1H45D/K745np4DwJjJjXNi5FlGD+TL2wyw50dCwkHKGHsrLDqup1qqP6yN7LBpC6UwNg==
+
+"@tonaljs/midi@^4.6.5":
+  version "4.6.5"
+  resolved "https://registry.yarnpkg.com/@tonaljs/midi/-/midi-4.6.5.tgz#e3737db18b38911ad33fea03445e2979a5f2228c"
+  integrity sha512-fJEZtNvV3M6yW1w+Tep60Rbv5PvuKszQcQzaJS1Loq5mHOKAzdmRfuJSpEpZBiaKEZ1WAMh1QKXYyOd+imyGQg==
+  dependencies:
+    "@tonaljs/core" "^4.6.5"
+
+"@tonaljs/note@^4.6.5":
+  version "4.6.5"
+  resolved "https://registry.yarnpkg.com/@tonaljs/note/-/note-4.6.5.tgz#0fcfa9cb9086d422d05f871e02c446d48d317ba9"
+  integrity sha512-Y0/eTzcReXzfcSLLG4k/dLLayqbvh/XYIkybG/QMDyR0BREuJq0Sw+NavbzhTtO0dadIQb/qfe0GFq4k2xS+NQ==
+  dependencies:
+    "@tonaljs/core" "^4.6.5"
+    "@tonaljs/midi" "^4.6.5"
+
 "@types/body-parser@*":
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
@@ -3091,11 +3111,6 @@ pinia@^2.0.23:
   dependencies:
     "@vue/devtools-api" "^6.4.4"
     vue-demi "*"
-
-pitchfinder@^2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/pitchfinder/-/pitchfinder-2.3.2.tgz#80debb4e0328255e02ab33cee567fa21413879bc"
-  integrity sha512-Mn3jcp/y1xmAUKI1lMIU8bIqE9AcSuKMFuvJI9C/36oNwVklUF167o0TH/H5fwxuSIaz+XfBD6vd2G5lnddpzw==
 
 plist@^3.0.0, plist@^3.0.1, plist@^3.0.4:
   version "3.0.6"

@@ -1,8 +1,8 @@
 <template>
   <main role="tuner-app">
     <section>
-      <q-btn @click="start" color="accent" label="Start" :disable="!isCapturing"  />
-    <q-btn @click="stop" color="accent" label="Stop" :disable="isCapturing"/>
+      <q-btn @click="start" color="accent" label="Start" :disabled="(tuner.stopped === undefined) || tuner.stopped"  />
+    <q-btn @click="stop" color="accent" label="Stop" :disabled="!tuner.stopped"/>
     </section>
 
       <notes-cmp :note="currentNote" ref='notesRef' />
@@ -12,7 +12,7 @@
 </template>
 <script setup
 >
-import { onMounted, computed, reactive, ref, watch } from "vue";
+import { onMounted,  ref, watch } from "vue";
 import { useTunerStore } from "src/stores/Tuner";
 import FrequencyBars from "./FrequencyBars.vue";
 import NotesCmp from "./NotesCmp.vue";
@@ -34,10 +34,6 @@ let currentNote ={
   value: 69,
   cents: 0,
 }
-// const degree = computed( () => {
-//   return ( ( ( currentNote?.cents ?? 0 ) / 50 ) * 45 )
-// } )
-const isCapturing = () =>( window.audioinput && window.audioinput.isCapturing() )
 
 onMounted( () => {
   update( {
@@ -50,6 +46,7 @@ onMounted( () => {
 } )
 const onNoteDetected = ( note ) => {
   if ( !notesRef.value.isAutoMode ) return;
+  currentNote = tuner.NoteDetected
   if ( lastNote !== note.name ) {
     update( note );
   } else {
@@ -97,7 +94,11 @@ const stop = () => {
     () => tuner.NoteDetected,
     ( newNote,oldNote ) => {
       // console.log( newNote, oldNote )
-      onNoteDetected( newNote )
+      if ( newNote.name !== '' ) {
+        onNoteDetected( newNote )
+      } else {
+        onNoteDetected( oldNote )
+      }
     }
   )
 

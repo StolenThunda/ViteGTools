@@ -5,14 +5,21 @@
     </div>
 </template>
 <script setup>
-import { onMounted,  ref} from "vue";
+import { onMounted, computed, ref } from "vue";
+import { useTunerStore } from "src/stores/Tuner";
 const meter = ref( null )
-const meterPointer = ref(null)
-const update = ( deg ) => {
-  deg = isNaN(deg) ? 0 : deg
-  console.log( deg )
-  meterPointer.value.style.transform = "rotate(" + deg+ "deg)";
+const meterPointer = ref( null )
+const tuner = useTunerStore()
+const deg = () => {
+    return ( ( ( tuner.NoteDetected.cents ?? 0 ) / 50 ) * 45 )
+  }
+const update = () => {
+  let degree = deg()
+  degree = isNaN(degree) ? 0 : degree
+  console.log( deg() )
+  meterPointer.value.style.transform = "rotate(" + deg() + "deg)";
 }
+
 onMounted( () => {
   for ( var i = 0; i <= 10; i += 1 ) {
     const $scale = document.createElement( "div" );

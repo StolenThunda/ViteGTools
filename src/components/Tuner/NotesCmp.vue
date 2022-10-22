@@ -98,7 +98,7 @@ const clearActive = function () {
 const update = (note ) => {
   // ConsoleMessage("update note val", note.value);
   note = (!note) ? props.note : note
-  console.log(note)
+  // console.log(note)
   if (note.value in $notesMap ) {
     active( $notesMap[note.value] );
     frequency.value.childNodes[0].textContent = parseFloat(

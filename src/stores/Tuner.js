@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import Note from "@tonaljs/note";
 // import "src/middleware/monkeypatch.js"
 export const useTunerStore = defineStore("tuner", {
   state: () => ({
@@ -27,6 +28,7 @@ export const useTunerStore = defineStore("tuner", {
     analyser: null,
     NoteDetected: {},
     oscillator: null,
+    stopped: null
   }),
 
   getters: {
@@ -86,25 +88,20 @@ export const useTunerStore = defineStore("tuner", {
       //       this.message = `IsIOS / AI Installed Error: ${err}`;
       //     } );
       // } else {
-      console.log("start record");
+      this.message = "start record";
       await navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
-          this.message = "Microphone: " + stream;
-          this.setup(stream);
+          this.message = "Begin Audio";
+          let source = this.audioContext.createMediaStreamSource( stream );
+          source.connect( this.analyser )
+          source.connect( this.workletNode )
+          source.connect( this.audioContext.destination );
         })
         .catch((error) => {
           this.message = `mediadevices error: ${error.name} = ${error.message}`;
         });
       // }
-    },
-    async setup(stream) {
-      this.message = `setup ${JSON.stringify(stream)}`;
-      let source = this.audioContext.createMediaStreamSource(stream);
-      source
-        .connect(this.analyser)
-        .connect(this.workletNode)
-        .connect(this.audioContext.destination);
     },
     getAutoCorrolatedPitch(audioData, corrolatedSignal) {
       // First: autocorrolate the signal
@@ -138,55 +135,58 @@ export const useTunerStore = defineStore("tuner", {
 
       maximaMean /= maximaCount;
 
-      return parseFloat(this.audioContext.sampleRate / maximaMean).toFixed(1);
+      return Number((this.audioContext.sampleRate / maximaMean).toFixed(1));
     },
-    getWorkletNode(ctx) {
-      if (ctx.audioWorklet) {
-        return ctx.audioWorklet
-          .addModule("worklets/tuner.worklet.js")
-          .then(async () => {
-            this.message = "worklet loaded";
-            let tunerNode = await new AudioWorkletNode(
-              this.audioContext,
-              "tuner-proc"
-            );
-            tunerNode.port.onmessage = (e) => {
-              if (e.data instanceof Float32Array) {
-                const audioData = e.data;
-                let corrolatedSignal = new Float32Array( this.analyser.fftSize );
-                this.analyser.getFloatTimeDomainData( audioData );
 
-                // const audioData = new Uint8Array(this.analyser.frequencyBinCount)
-                // let corrolatedSignal = new Uint8Array(
-                //   this.analyser.frequencyBinCount
-                // );
-                // this.analyser.getByteFrequencyData(audioData);
+    getWorkletNode ( ctx ) {
+      // console.log( { ctx } )
+      if ( ctx.audioWorklet ) return ctx.audioWorklet
+        .addModule( "worklets/tuner.worklet.js" )
+        .then( async () => {
+          this.message = "worklet loaded";
+          let workletNode = await new AudioWorkletNode(
+            this.audioContext,
+            "tuner-proc"
+          );
+          workletNode.port.onmessage = ( e ) => {
+            if ( this.stopped ) return null;
+            if ( e.data instanceof Float32Array ) {
+              const audioData = e.data;
+              let corrolatedSignal = new Float32Array( this.analyser.fftSize );
+              this.analyser.getFloatTimeDomainData( audioData );
 
-                const frequency = this.getAutoCorrolatedPitch(
-                  audioData,
-                  corrolatedSignal
-                );
-                if (frequency > 3270) return;
-                this.message = `worklet data: ${frequency}`;
-                console.log(this.message);
-                if (frequency) {
-                  const note = this.getNote(frequency);
+              // const audioData = new Uint8Array(this.analyser.frequencyBinCount)
+              // let corrolatedSignal = new Uint8Array(
+              //   this.analyser.frequencyBinCount
+              // );
+              // this.analyser.getByteFrequencyData(audioData);
+
+              const frequency = this.getAutoCorrolatedPitch(
+                audioData,
+                corrolatedSignal
+              );
+              if ( frequency > 3270 ) return;  // nothing higher than G# oct7
+              this.message = `worklet data: ${frequency}`;
+              if ( frequency ) {
+                  const note = Note.get( Note.fromFreq( frequency ) )
                   this.NoteDetected = {
-                    name: this.noteStrings[note % 12],
-                    value: note,
-                    cents: this.getCents(frequency, note),
-                    octave: parseInt(note / 12) - 1,
+                    name: note.name,
+                    value: note.midi,
+                    cents: this.getCents( frequency, note.midi ),
+                    octave: note.oct,
                     frequency: frequency,
                   };
-                }
+                console.log({note})
+                console.log( `${this.NoteDetected.name}: ${JSON.stringify( this.NoteDetected )}` );
               }
-            };
-            return tunerNode;
-          })
-          .catch((err) => {
-            console.log(`worklet error: ${err}`);
-          });
-      }
+            }
+          };
+          return workletNode;
+        } )
+        .catch( ( err ) => {
+          this.message = `worklet error: ${err}`
+          console.log( this.message );
+        } );
     },
     getAudioContext() {
       return new (window.AudioContext || window.webkitAudioContext)();
@@ -195,6 +195,7 @@ export const useTunerStore = defineStore("tuner", {
       this.audioContext = null;
       this.analyser = null;
       this.workletNode = null;
+      this.stopped = true
     },
     async init() {
       try {
@@ -204,17 +205,20 @@ export const useTunerStore = defineStore("tuner", {
         // this.analyser.maxDecibels = 0;
         // this.analyser.fftSize = 4096;
         this.workletNode = await this.getWorkletNode( this.audioContext );
-        console.log('Tuner Initialized')
-      } catch (error) {
+        this.stopped = false
+        this.message = "Tuner Initialized";
+      } catch ( error ) {
+        this.message = JSON.stringify( error )
         console.error({ error });
       }
 
       // console.dir( this );
     },
-    getNote(frequency) {
-      const note = 12 * (Math.log(frequency / this.middleA) / Math.log(2));
-      return Math.round(note) + this.semitone;
-    },
+    // getNote ( frequency ) {
+    //   console.log(frequency)
+    //   const note = 12 * (Math.log(frequency / this.middleA) / Math.log(2));
+    //   return Math.round(note) + this.semitone;
+    // },
     getStandardFrequency(note) {
       return this.middleA * Math.pow(2, (note - this.semitone) / 12);
     },
