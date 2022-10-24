@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header >
       <q-toolbar>
         <q-btn
           flat
@@ -11,18 +11,29 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title class="text-h3 text-weight-bolder">
           Guitar tools
         </q-toolbar-title>
 
-        <div><sup>Quasar v{{ $q.version }}</sup></div>
+        <div class="column q-ma-sm">
+          <sup>Quasar v{{ $q.version }}</sup>
+          <q-btn
+            flat
+            dense
+            round
+            size="2vh"
+            to="/"
+            icon="home"
+            aria-label="Home"
+          />
+          </div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
+      overlay
     >
       <q-list>
         <q-item-label
@@ -39,7 +50,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="overflow-hidden">
       <router-view v-slot="{Component}">
 
         <transition name="moveUp">
@@ -53,45 +64,18 @@
   </q-layout>
 </template>
 <script>
-const linksList = [
-  {
-    title: 'Fretboard Navigator',
-    caption: 'Scales, "Boxes" and More',
-    icon: 'mdi-car-shift-pattern',
-    link: '/fretboard'
-  },
-  {
-    title: 'Metronome',
-    caption: 'Working on timing',
-    icon: 'mdi-metronome',
-    link: '/metronome'
-  },
-  {
-    title: 'Spider Tool',
-    caption: 'Finger strengthening and dexterity',
-    icon: 'mdi-spider',
-    link: '/spider'
-  },
-  {
-    title: 'Tuner',
-    caption: '2ner',
-    icon: 'mdi-tune',
-    link: '/tuner2'
-  }
-]
-
 export default {
 name: 'MainLayout',
 };
 </script>
 
 <script setup>
-import 'src/middleware/monkeypatch.js'
+// import 'src/middleware/monkeypatch.js'
 import { ref } from 'vue'
+import { linksList } from "src/components/ToolList.vue";
 import ToolLink from "components/ToolLink.vue";
 
 const leftDrawerOpen = ref( false )
-
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 </script>
 <style>

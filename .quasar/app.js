@@ -12,36 +12,16 @@
  **/
 
 
-import vueDevtools from '@vue/devtools'
-
 
 import { Quasar } from 'quasar'
 import { markRaw } from 'vue'
-import AppComponent from 'app/src/App.vue'
+import RootComponent from 'app/src/App.vue'
 
 
 import createRouter from 'app/src/router/index'
 
 
 
-
-import { defineComponent, h, onMounted } from 'vue'
-const RootComponent = defineComponent({
-  name: 'AppWrapper',
-  setup (props) {
-    onMounted(() => {
-      
-
-      
-      vueDevtools.connect('localhost', 8098)
-      
-
-      
-    })
-
-    return () => h(AppComponent, props)
-  }
-})
 
 
 
@@ -51,8 +31,6 @@ export default async function (createAppFn, quasarUserOptions) {
   // Here we inject into it the Quasar UI, the router & possibly the store.
   const app = createAppFn(RootComponent)
 
-  
-  app.config.performance = true
   
 
   app.use(Quasar, quasarUserOptions)

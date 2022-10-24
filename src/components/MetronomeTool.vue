@@ -112,17 +112,13 @@ const capitalize = (string) => {
   margin: 5px;
   text-align: center;
   border-radius: 50%;
-  border: 2px double seashell;
-  background-color: whitesmoke;
   color: orange;
   font-size: larger;
   font-weight: 800;
 }
 
 [name^="indicator"].active {
-  background-color: orange;
-  color: white;
   scale: 1.2;
-  box-shadow: 2px 2px 5px orange;
+  box-shadow: 1px 1px 6px orange;
 }
 </style>

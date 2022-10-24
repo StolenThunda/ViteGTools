@@ -1,8 +1,22 @@
 <template>
   <main role="tuner-app">
     <section>
-      <q-btn @click="start" color="accent" label="Start" :disabled="(tuner.stopped === undefined) || tuner.stopped"  />
-    <q-btn @click="stop" color="accent" label="Stop" :disabled="!tuner.stopped"/>
+      <q-btn
+        @click="start"
+        color="positive"
+        label="Start"
+      class="q-ma-md"
+      size="3vh"
+      rounded
+        :disabled="(tuner.stopped === undefined) || tuner.stopped" />
+   <q-btn
+      @click="stop"
+      label="Stop"
+      color="negative"
+      class="q-ma-md"
+      size="3vh"
+      rounded
+      :disabled="!tuner.stopped" />
     </section>
 
       <notes-cmp :note="currentNote" ref='notesRef' />
@@ -12,11 +26,12 @@
 </template>
 <script setup
 >
-import { onMounted,  ref, watch } from "vue";
+import {computed, onMounted,  ref, watch } from "vue";
 import { useTunerStore } from "src/stores/Tuner";
 import FrequencyBars from "./FrequencyBars.vue";
 import NotesCmp from "./NotesCmp.vue";
 import MeterCmp from "./MeterCmp.vue";
+import { copyFile } from "fs";
 const tuner = useTunerStore()
 
 let lastNote = ""
@@ -34,7 +49,9 @@ let currentNote ={
   value: 69,
   cents: 0,
 }
-
+const isPlayingTest = computed( () => {
+  return (isPlaying === null)
+})
 onMounted( () => {
   update( {
     name: "A",

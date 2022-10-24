@@ -25,6 +25,7 @@ export const useTunerStore = defineStore("tuner", {
     audioinputInstalled: false,
     message: "",
     workletNode: null,
+    gainNode: null,
     analyser: null,
     NoteDetected: {},
     oscillator: null,
@@ -94,6 +95,8 @@ export const useTunerStore = defineStore("tuner", {
         .then((stream) => {
           this.message = "Begin Audio";
           let source = this.audioContext.createMediaStreamSource( stream );
+          // source.connect(this.gainNode)
+          this.gainNode.gain.value = 0
           source.connect( this.analyser )
           source.connect( this.workletNode )
           source.connect( this.audioContext.destination );
@@ -154,13 +157,6 @@ export const useTunerStore = defineStore("tuner", {
               const audioData = e.data;
               let corrolatedSignal = new Float32Array( this.analyser.fftSize );
               this.analyser.getFloatTimeDomainData( audioData );
-
-              // const audioData = new Uint8Array(this.analyser.frequencyBinCount)
-              // let corrolatedSignal = new Uint8Array(
-              //   this.analyser.frequencyBinCount
-              // );
-              // this.analyser.getByteFrequencyData(audioData);
-
               const frequency = this.getAutoCorrolatedPitch(
                 audioData,
                 corrolatedSignal
@@ -201,6 +197,7 @@ export const useTunerStore = defineStore("tuner", {
       try {
         this.audioContext = this.getAudioContext();
         this.analyser = this.audioContext.createAnalyser();
+        this.gainNode = this.audioContext.createGain();
         // this.analyser.minDecibels = -90;
         // this.analyser.maxDecibels = 0;
         // this.analyser.fftSize = 4096;
