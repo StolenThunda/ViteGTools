@@ -18,9 +18,7 @@
       <q-space/>
       </q-toolbar>
       <div class="fit row justify-between justify-evenly content-center">
-        <div class="col-5-lg row">
-          <!-- size="10px" -->
-          <div class="column q-pa-lg q-ma-lg q-mt-xl">
+          <div class="column q-pa-sm q-ma-sm q-mt-md">
             <q-btn
               glossy
               round
@@ -28,6 +26,7 @@
               :icon="store.isPlaying ? 'mdi-pause' : 'mdi-play'"
               color="accent"
               @click="store.play"
+              
             />
           </div>
           <div class="q-pa-lg q-ma-lg">
@@ -46,8 +45,8 @@
               <q-slider v-model="store.meter" :min="0" :max="12" />
             </div>
           </div>
-        </div>
-        <div class="q-px-md col-7">
+        <!-- </div> -->
+        <div class="q-px-md col-8 col-md-6">
           <span class="text-h4">Volumes</span>
           <section class="column">
             <div v-for="name in store.volumeNames" :key="name" class="column">
